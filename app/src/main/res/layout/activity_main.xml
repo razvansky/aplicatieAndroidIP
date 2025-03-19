@@ -22,11 +22,13 @@
         android:id="@+id/id_conectare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:inputType="text"
-        android:text="ID Cont"
+        android:text=""
+        android:hint="ID Cont"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/apa" />
 
