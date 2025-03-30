@@ -1,5 +1,6 @@
 package com.example.aplicatieandroidip;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         String pass = parola.getText().toString();
 
         if (id.equals("admin") && pass.equals("123")) {
-            ((TextView) findViewById(R.id.apa)).setText("MAIFIAAA");
+            Intent intent = new Intent(this, Logat.class);
+            startActivity(intent);
         }
     }
 }

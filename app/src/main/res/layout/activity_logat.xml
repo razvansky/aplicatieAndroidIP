@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Logat">
+
+  <Button
+      android:id="@+id/Teleghidare"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="68dp"
+      android:layout_marginBottom="16dp"
+      android:text="Teleghidare"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
+
+  <Button
+      android:id="@+id/button2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:text="Comanda"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.369"
+      app:layout_constraintStart_toEndOf="@+id/Teleghidare" />
+
+  <ImageButton
+      android:id="@+id/left_but"
+      android:layout_width="100dp"
+      android:layout_height="97dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/right_but"
+      app:layout_constraintHorizontal_bias="0.36"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.716"
+      app:srcCompat="@drawable/screenshot_35" />
+
+  <ImageButton
+      android:id="@+id/right_but"
+      android:layout_width="93dp"
+      android:layout_height="96dp"
+      android:layout_marginEnd="60dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.716"
+      app:srcCompat="@drawable/screenshot_37" />
+
+  <ImageButton
+      android:id="@+id/up_but"
+      android:layout_width="97dp"
+      android:layout_height="0dp"
+      app:layout_constraintBottom_toTopOf="@+id/down_but"
+      app:layout_constraintDimensionRatio="h,1:1"
+      app:layout_constraintEnd_toStartOf="@+id/right_but"
+      app:layout_constraintStart_toEndOf="@+id/left_but"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.802"
+      app:srcCompat="@drawable/screenshot_36" />
+
+  <ImageButton
+      android:id="@+id/down_but"
+      android:layout_width="99dp"
+      android:layout_height="96dp"
+      android:layout_marginBottom="28dp"
+      app:layout_constraintBottom_toTopOf="@+id/Teleghidare"
+      app:layout_constraintEnd_toStartOf="@+id/right_but"
+      app:layout_constraintHorizontal_bias="1.0"
+      app:layout_constraintStart_toEndOf="@+id/left_but"
+      app:srcCompat="@drawable/screenshot_38" />
+
+  <TextView
+      android:id="@+id/textView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="216dp"
+      android:text="TextView"
+      app:layout_constraintBottom_toTopOf="@+id/up_but"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.492"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.894" />
+
+  <Button
+      android:id="@+id/button7"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="140dp"
+      android:onClick="Mod_Auto"
+      android:text="Mod auto"
+      app:layout_constraintBottom_toTopOf="@+id/left_but"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.052"
+      app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

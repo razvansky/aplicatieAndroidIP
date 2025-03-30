@@ -24,8 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="34dp"
         android:ems="10"
+        android:hint="ID Cont"
         android:inputType="text"
-        android:text="ID Cont"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/apa" />
