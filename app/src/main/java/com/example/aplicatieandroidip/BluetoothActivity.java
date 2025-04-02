@@ -24,26 +24,11 @@ public class BluetoothActivity extends AppCompatActivity {
     private static final String TAG = "BluetoothActivity";
     BluetoothAdapter mBluetoothAdapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth);
-
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); // Checks if device is capable of BT (usually is)
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy: CALLED");
-        super.onDestroy();
-        unregisterReceiver(mBroadcastReceiverTOGGLE); // Unregisters the Broadcast Receiver
-    }
-
     /*
-    * Verifica si "asculta" starile device-ului
-    * */
+     * Verifica si "asculta" starile device-ului
+     * */
 
-    private final BroadcastReceiver mBroadcastReceiverTOGGLE = new BroadcastReceiver() {
+    private final BroadcastReceiver mBroadcastReceiverToggleBT = new BroadcastReceiver() {
         @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -72,6 +57,29 @@ public class BluetoothActivity extends AppCompatActivity {
         }
     };
 
+    private final BroadcastReceiver mBroadcastReceiverToggleDiscoverability = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_bluetooth);
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); // Checks if device is capable of BT (usually is)
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy: CALLED");
+        super.onDestroy();
+        unregisterReceiver(mBroadcastReceiverToggleBT); // Unregisters the Broadcast Receiver
+    }
+
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     public void toggleBT(View v){
         if(mBluetoothAdapter == null)
@@ -85,7 +93,7 @@ public class BluetoothActivity extends AppCompatActivity {
             startActivity(enableBTIntent);
 
             IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            registerReceiver(mBroadcastReceiverTOGGLE, BTIntent); //Tells the receiver the state of the device
+            registerReceiver(mBroadcastReceiverToggleBT, BTIntent); //Tells the receiver the state of the device
         }
         if(mBluetoothAdapter.isEnabled())
         {
@@ -93,7 +101,7 @@ public class BluetoothActivity extends AppCompatActivity {
             mBluetoothAdapter.disable();
 
             IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            registerReceiver(mBroadcastReceiverTOGGLE, BTIntent);
+            registerReceiver(mBroadcastReceiverToggleBT, BTIntent);
         }
 
     }
