@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class BluetoothActivity extends AppCompatActivity {
+public class BluetoothActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
     private static final String TAG = "BluetoothActivity";
     BluetoothAdapter mBluetoothAdapter;
     public ArrayList<BluetoothDevice> mBTDevices;
@@ -110,23 +111,54 @@ public class BluetoothActivity extends AppCompatActivity {
         }
     };
 
+    private final BroadcastReceiver mBroadcastReceiverPairBT = new BroadcastReceiver() {
+        @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if(action.equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED))
+            {
+                BluetoothDevice mDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+                switch (mDevice.getBondState())
+                {
+                    case BluetoothDevice.BOND_BONDED:
+                        Log.d(TAG, "onReceive: BOND_BONDED");
+                        break;
+                    case BluetoothDevice.BOND_BONDING:
+                        Log.d(TAG, "onReceive: BOND_BONDING");
+                        break;
+                    case BluetoothDevice.BOND_NONE:
+                        Log.d(TAG, "onReceive: BOND_NONE");
+                        break;
+                }
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
 
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); // Checks if device is capable of BT (usually is)
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();       // Checks if device is capable of BT (usually is)
         lvDeviceList = findViewById(R.id.lvDeviceList);
         mBTDevices = new ArrayList<>();
+
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);      //This is broadcast only when there is an attempt at bonding
+        registerReceiver(mBroadcastReceiverPairBT, filter);
+        lvDeviceList.setOnItemClickListener(BluetoothActivity.this);        //Makes it so that an item can be selected
     }
 
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy: CALLED");
         super.onDestroy();
-        unregisterReceiver(mBroadcastReceiverToggleBT); // Unregisters the Broadcast Receiver
+        unregisterReceiver(mBroadcastReceiverToggleBT);     // Unregisters the Broadcast Receiver
         unregisterReceiver(mBroadcastReceiverToggleDiscoverability);
         unregisterReceiver(mBroadcastReceiverDiscoverBT);
+        unregisterReceiver(mBroadcastReceiverPairBT);
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
@@ -212,5 +244,20 @@ public class BluetoothActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @RequiresPermission(allOf = {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT})
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mBluetoothAdapter.cancelDiscovery();        //This eats a lot of memory if not cancelled
+        Log.d(TAG, "onItemClick: Chose a device");
+        String deviceName = mBTDevices.get(position).getName();
+        String deviceAddress = mBTDevices.get(position).getAddress();
+
+        Log.d(TAG, "onItemClick: deviceName" + deviceName);
+        Log.d(TAG, "onItemClick: deviceAddress" + deviceAddress);
+
+        Log.d(TAG, "Trying to pair with " + deviceName);
+        mBTDevices.get(position).createBond();
     }
 }
