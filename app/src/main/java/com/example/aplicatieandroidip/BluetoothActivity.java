@@ -60,7 +60,28 @@ public class BluetoothActivity extends AppCompatActivity {
     private final BroadcastReceiver mBroadcastReceiverToggleDiscoverability = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
 
+            if(action.equals(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED))
+            {
+                int mode = intent.getIntExtra(BluetoothAdapter.EXTRA_SCAN_MODE, BluetoothAdapter.ERROR);
+
+                switch (mode)
+                {
+                    case BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE:
+                        Log.d(TAG, "onReceive: Discoverability Enabled");
+                        Toast.makeText(context, "Discoverability Enabled", Toast.LENGTH_SHORT).show();
+                        break;
+                    case BluetoothAdapter.SCAN_MODE_CONNECTABLE:
+                        Log.d(TAG, "onReceive: Discoverability Disabled. Able to receive connections");
+                        Toast.makeText(context, "Discoverability Disabled. Able to receive connections.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case BluetoothAdapter.SCAN_MODE_NONE:
+                        Log.d(TAG, "onReceive: Discoverability Disabled. Not able to receive connections");
+                        Toast.makeText(context, "Discoverability Disabled. Not able to receive connections", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
         }
     };
 
@@ -78,6 +99,7 @@ public class BluetoothActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy: CALLED");
         super.onDestroy();
         unregisterReceiver(mBroadcastReceiverToggleBT); // Unregisters the Broadcast Receiver
+        unregisterReceiver(mBroadcastReceiverToggleDiscoverability);
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
@@ -103,6 +125,18 @@ public class BluetoothActivity extends AppCompatActivity {
             IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
             registerReceiver(mBroadcastReceiverToggleBT, BTIntent);
         }
+    }
 
+    @RequiresPermission(Manifest.permission.BLUETOOTH_ADVERTISE)
+    public void toggleDiscoverability(View v)
+    {
+        Log.d(TAG, "toggleDiscoverability: Making device discoverable for 60 seconds");
+
+        Intent enableDiscoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        enableDiscoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60);
+        startActivity(enableDiscoverableIntent);
+
+        IntentFilter discoverableIntent = new IntentFilter(mBluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
+        registerReceiver(mBroadcastReceiverToggleDiscoverability, discoverableIntent);
     }
 }
