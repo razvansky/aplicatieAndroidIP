@@ -10,19 +10,21 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+
+import java.util.ArrayList;
 
 public class BluetoothActivity extends AppCompatActivity {
     private static final String TAG = "BluetoothActivity";
     BluetoothAdapter mBluetoothAdapter;
+    public ArrayList<BluetoothDevice> mBTDevices;
+    public DeviceListAdapter mDeviceListAdapter;
+    ListView lvDeviceList;
 
     /*
      * Verifica si "asculta" starile device-ului
@@ -85,13 +87,37 @@ public class BluetoothActivity extends AppCompatActivity {
         }
     };
 
+    private final BroadcastReceiver mBroadcastReceiverDiscoverBT = new BroadcastReceiver() {
+        @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            Log.d(TAG, "onReceive: Action Found.");
+
+            if(action.equals(BluetoothDevice.ACTION_FOUND))
+            {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+                if(device != null && !deviceExists(device))
+                {
+                    mBTDevices.add(device);
+                    Log.d(TAG, "onReceive: " + device.getName() + " " + device.getAddress());
+                    mDeviceListAdapter = new DeviceListAdapter(context, mBTDevices, R.layout.device_adapter_view);
+                    lvDeviceList.setAdapter(mDeviceListAdapter);
+                }
+
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); // Checks if device is capable of BT (usually is)
-
+        lvDeviceList = findViewById(R.id.lvDeviceList);
+        mBTDevices = new ArrayList<>();
     }
 
     @Override
@@ -100,6 +126,7 @@ public class BluetoothActivity extends AppCompatActivity {
         super.onDestroy();
         unregisterReceiver(mBroadcastReceiverToggleBT); // Unregisters the Broadcast Receiver
         unregisterReceiver(mBroadcastReceiverToggleDiscoverability);
+        unregisterReceiver(mBroadcastReceiverDiscoverBT);
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
@@ -138,5 +165,52 @@ public class BluetoothActivity extends AppCompatActivity {
 
         IntentFilter discoverableIntent = new IntentFilter(mBluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
         registerReceiver(mBroadcastReceiverToggleDiscoverability, discoverableIntent);
+    }
+
+    ///TO DO: Deschide lista de discover intr-un fragment
+    @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
+    public void discoverBT(View v)
+    {
+        Log.d(TAG, "discoverBT: Looking for unpaired devices.");
+
+        if(mBluetoothAdapter.isDiscovering())
+        {
+            mBluetoothAdapter.cancelDiscovery();
+            Log.d(TAG, "discoverBT: Canceling discovery.");
+
+            checkBTPermissions();
+
+            mBluetoothAdapter.startDiscovery();
+            IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            registerReceiver(mBroadcastReceiverDiscoverBT, discoverDevicesIntent);
+        }
+        if(!mBluetoothAdapter.isDiscovering())
+        {
+            checkBTPermissions();
+
+            mBluetoothAdapter.startDiscovery();
+            IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            registerReceiver(mBroadcastReceiverDiscoverBT, discoverDevicesIntent);
+        }
+    }
+    private void checkBTPermissions()               //Android 6.0+ needs to check some permissions in order to be able to discover other devices
+    {
+        int permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
+        permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COURSE_LOCATION");
+        if(permissionCheck != 0)
+        {
+            this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
+        }
+    }
+
+    private boolean deviceExists(BluetoothDevice device)            //Function for checking if the device is already in the ListView
+    {
+        for(BluetoothDevice BTDevice : mBTDevices)
+        {
+            if(BTDevice.getAddress().equals(device.getAddress())){
+                return true;
+            }
+        }
+        return false;
     }
 }
