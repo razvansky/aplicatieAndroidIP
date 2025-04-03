@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -99,12 +100,24 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
             {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-                if(device != null && !deviceExists(device))
+                if(device != null && !deviceExists(device) && device.getName() != null)
                 {
                     mBTDevices.add(device);
                     Log.d(TAG, "onReceive: " + device.getName() + " " + device.getAddress());
-                    mDeviceListAdapter = new DeviceListAdapter(context, mBTDevices, R.layout.device_adapter_view);
-                    lvDeviceList.setAdapter(mDeviceListAdapter);
+
+                    // Preserve scroll position
+                    int index = lvDeviceList.getFirstVisiblePosition();
+                    View v = lvDeviceList.getChildAt(0);
+                    int top = (v == null) ? 0 : v.getTop();
+
+                    if (mDeviceListAdapter == null) {
+                        mDeviceListAdapter = new DeviceListAdapter(context, mBTDevices, R.layout.device_adapter_view);
+                        lvDeviceList.setAdapter(mDeviceListAdapter);
+                    } else {
+                        mDeviceListAdapter.notifyDataSetChanged();
+                    }
+
+                    lvDeviceList.setSelectionFromTop(index, top);
                 }
 
             }
@@ -155,7 +168,9 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
     protected void onDestroy() {
         Log.d(TAG, "onDestroy: CALLED");
         super.onDestroy();
-        unregisterReceiver(mBroadcastReceiverToggleBT);     // Unregisters the Broadcast Receiver
+
+        // Unregisters the Broadcast Receivers
+        unregisterReceiver(mBroadcastReceiverToggleBT);
         unregisterReceiver(mBroadcastReceiverToggleDiscoverability);
         unregisterReceiver(mBroadcastReceiverDiscoverBT);
         unregisterReceiver(mBroadcastReceiverPairBT);
@@ -204,26 +219,26 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
     public void discoverBT(View v)
     {
         Log.d(TAG, "discoverBT: Looking for unpaired devices.");
+        Button btnRefreshDevices = findViewById(R.id.btnRefreshDevices);
+        btnRefreshDevices.setEnabled(false);
 
-        if(mBluetoothAdapter.isDiscovering())
-        {
+        if(mBluetoothAdapter.isDiscovering()) {
             mBluetoothAdapter.cancelDiscovery();
             Log.d(TAG, "discoverBT: Canceling discovery.");
+        }
 
             checkBTPermissions();
 
             mBluetoothAdapter.startDiscovery();
             IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             registerReceiver(mBroadcastReceiverDiscoverBT, discoverDevicesIntent);
-        }
-        if(!mBluetoothAdapter.isDiscovering())
-        {
-            checkBTPermissions();
-
-            mBluetoothAdapter.startDiscovery();
-            IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            registerReceiver(mBroadcastReceiverDiscoverBT, discoverDevicesIntent);
-        }
+        new android.os.Handler().postDelayed(() -> {
+            if (mBluetoothAdapter.isDiscovering()) {
+                mBluetoothAdapter.cancelDiscovery();
+                Log.d(TAG, "discoverBT: Stopping discovery after 30 seconds.");
+            }
+            btnRefreshDevices.setEnabled(true);  // Re-enable button after stopping discovery
+        }, 30000);
     }
     private void checkBTPermissions()               //Android 6.0+ needs to check some permissions in order to be able to discover other devices
     {
@@ -254,10 +269,24 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         String deviceName = mBTDevices.get(position).getName();
         String deviceAddress = mBTDevices.get(position).getAddress();
 
-        Log.d(TAG, "onItemClick: deviceName" + deviceName);
-        Log.d(TAG, "onItemClick: deviceAddress" + deviceAddress);
+        Log.d(TAG, "onItemClick: deviceName: " + deviceName);
+        Log.d(TAG, "onItemClick: deviceAddress: " + deviceAddress);
 
         Log.d(TAG, "Trying to pair with " + deviceName);
         mBTDevices.get(position).createBond();
+    }
+
+    @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
+    public void refreshDevices(View v)
+    {
+        Log.d(TAG, "refreshDevices: Refreshing available devices...");
+
+        mBTDevices.clear();
+        if(mDeviceListAdapter != null)
+        {
+            mDeviceListAdapter.notifyDataSetChanged();
+        }
+
+        discoverBT(v);
     }
 }
