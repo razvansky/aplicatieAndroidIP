@@ -202,43 +202,57 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_ADVERTISE)
-    public void toggleDiscoverability(View v)
-    {
-        Log.d(TAG, "toggleDiscoverability: Making device discoverable for 60 seconds");
+    public void toggleDiscoverability(View v) {
+        if (mBluetoothAdapter.isEnabled()) {
+            Log.d(TAG, "toggleDiscoverability: Making device discoverable for 60 seconds");
 
-        Intent enableDiscoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        enableDiscoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60);
-        startActivity(enableDiscoverableIntent);
+            Intent enableDiscoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            enableDiscoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60);
+            startActivity(enableDiscoverableIntent);
 
-        IntentFilter discoverableIntent = new IntentFilter(mBluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
-        registerReceiver(mBroadcastReceiverToggleDiscoverability, discoverableIntent);
+            IntentFilter discoverableIntent = new IntentFilter(mBluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
+            registerReceiver(mBroadcastReceiverToggleDiscoverability, discoverableIntent);
+        }
+        else {
+            Log.d(TAG, "toggleDiscoverability: BLUETOOTH IS NOT ENABLED!");
+            Toast.makeText(getBaseContext().getApplicationContext(), "Please Enable Bluetooth", Toast.LENGTH_SHORT).show();
+        }
     }
 
     ///TO DO: Deschide lista de discover intr-un fragment
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     public void discoverBT(View v)
     {
-        Log.d(TAG, "discoverBT: Looking for unpaired devices.");
         Button btnRefreshDevices = findViewById(R.id.btnRefreshDevices);
-        btnRefreshDevices.setEnabled(false);
+        if(mBluetoothAdapter.isEnabled()) {
+            Log.d(TAG, "discoverBT: Looking for unpaired devices.");
+            btnRefreshDevices.setVisibility(View.VISIBLE);
+            btnRefreshDevices.setEnabled(false);
 
-        if(mBluetoothAdapter.isDiscovering()) {
-            mBluetoothAdapter.cancelDiscovery();
-            Log.d(TAG, "discoverBT: Canceling discovery.");
-        }
+            if (mBluetoothAdapter.isDiscovering()) {
+                mBluetoothAdapter.cancelDiscovery();
+                Log.d(TAG, "discoverBT: Canceling discovery.");
+            }
 
             checkBTPermissions();
 
             mBluetoothAdapter.startDiscovery();
             IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             registerReceiver(mBroadcastReceiverDiscoverBT, discoverDevicesIntent);
-        new android.os.Handler().postDelayed(() -> {
-            if (mBluetoothAdapter.isDiscovering()) {
-                mBluetoothAdapter.cancelDiscovery();
-                Log.d(TAG, "discoverBT: Stopping discovery after 30 seconds.");
-            }
-            btnRefreshDevices.setEnabled(true);  // Re-enable button after stopping discovery
-        }, 30000);
+            new android.os.Handler().postDelayed(() -> {
+                if (mBluetoothAdapter.isDiscovering()) {
+                    mBluetoothAdapter.cancelDiscovery();
+                    Log.d(TAG, "discoverBT: Stopping discovery after 30 seconds.");
+                }
+                btnRefreshDevices.setEnabled(true);  // Re-enable button after stopping discovery
+            }, 30000);
+        }
+        else{
+            Log.d(TAG, "toggleDiscoverability: BLUETOOTH IS NOT ENABLED!");
+            Toast.makeText(getBaseContext().getApplicationContext(), "Please Enable Bluetooth", Toast.LENGTH_SHORT).show();
+            btnRefreshDevices.setVisibility(View.VISIBLE);
+            btnRefreshDevices.setEnabled(false);
+        }
     }
     private void checkBTPermissions()               //Android 6.0+ needs to check some permissions in order to be able to discover other devices
     {

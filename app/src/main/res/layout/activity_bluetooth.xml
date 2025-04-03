@@ -58,6 +58,7 @@
         android:layout_marginBottom="4dp"
         android:onClick="refreshDevices"
         android:text="Refresh"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/lvDeviceList"
         app:layout_constraintEnd_toEndOf="@+id/lvDeviceList" />
 </androidx.constraintlayout.widget.ConstraintLayout>
