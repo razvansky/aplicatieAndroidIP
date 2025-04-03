@@ -1,5 +1,6 @@
 package com.example.aplicatieandroidip;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -75,7 +76,38 @@ public class Logat extends AppCompatActivity {
 
     public void Mod_Auto(View v){
         m_auto = !m_auto;
+        ImageButton left = findViewById(R.id.left_but);
+        ImageButton right = findViewById(R.id.right_but);
+        ImageButton up = findViewById(R.id.up_but);
+        ImageButton down = findViewById(R.id.down_but);
+
+
+        if(m_auto==false) {
+            left.setVisibility(View.INVISIBLE);
+            right.setVisibility(View.INVISIBLE);
+            up.setVisibility(View.INVISIBLE);
+            down.setVisibility(View.INVISIBLE);
+        }
+        else {
+            left.setVisibility(View.VISIBLE);
+            right.setVisibility(View.VISIBLE);
+            up.setVisibility(View.VISIBLE);
+            down.setVisibility(View.VISIBLE);
+        }
+
+
         String s = Boolean.toString(m_auto);
         Log.println(Log.INFO,"mauto",s);
+
+    }
+
+    public void Bluetooth_b(View v){
+        Intent intent = new Intent(this, BluetoothActivity.class);
+        startActivity(intent);
+    }
+
+    public void NFC_b(View v){
+        Intent intent = new Intent(this, NFCActivity.class);
+        startActivity(intent);
     }
 }

@@ -10,70 +10,85 @@
 
   <Button
       android:id="@+id/Teleghidare"
-      android:layout_width="0dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="68dp"
+      android:layout_marginStart="12dp"
       android:layout_marginBottom="16dp"
       android:text="Teleghidare"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toStartOf="parent" />
 
   <Button
-      android:id="@+id/button2"
+      android:id="@+id/but_com"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="16dp"
+      android:onClick="NFC_b"
       android:text="Comanda"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.369"
+      app:layout_constraintHorizontal_bias="0.095"
       app:layout_constraintStart_toEndOf="@+id/Teleghidare" />
-
-  <ImageButton
-      android:id="@+id/left_but"
-      android:layout_width="100dp"
-      android:layout_height="97dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toStartOf="@+id/right_but"
-      app:layout_constraintHorizontal_bias="0.36"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.716"
-      app:srcCompat="@drawable/screenshot_35" />
 
   <ImageButton
       android:id="@+id/right_but"
       android:layout_width="93dp"
       android:layout_height="96dp"
-      android:layout_marginEnd="60dp"
-      app:layout_constraintBottom_toBottomOf="parent"
+      android:layout_marginEnd="64dp"
+      app:layout_constraintBottom_toTopOf="@+id/but_bluetooth"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.716"
+      app:layout_constraintVertical_bias="0.781"
       app:srcCompat="@drawable/screenshot_37" />
-
-  <ImageButton
-      android:id="@+id/up_but"
-      android:layout_width="97dp"
-      android:layout_height="0dp"
-      app:layout_constraintBottom_toTopOf="@+id/down_but"
-      app:layout_constraintDimensionRatio="h,1:1"
-      app:layout_constraintEnd_toStartOf="@+id/right_but"
-      app:layout_constraintStart_toEndOf="@+id/left_but"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.802"
-      app:srcCompat="@drawable/screenshot_36" />
 
   <ImageButton
       android:id="@+id/down_but"
       android:layout_width="99dp"
       android:layout_height="96dp"
-      android:layout_marginBottom="28dp"
-      app:layout_constraintBottom_toTopOf="@+id/Teleghidare"
+      android:layout_marginTop="96dp"
+      app:layout_constraintBottom_toBottomOf="@+id/right_but"
       app:layout_constraintEnd_toStartOf="@+id/right_but"
       app:layout_constraintHorizontal_bias="1.0"
       app:layout_constraintStart_toEndOf="@+id/left_but"
+      app:layout_constraintTop_toBottomOf="@+id/up_but"
+      app:layout_constraintVertical_bias="0.0"
       app:srcCompat="@drawable/screenshot_38" />
+
+  <Button
+      android:id="@+id/but_auto"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="148dp"
+      android:onClick="Mod_Auto"
+      android:text="Mod auto"
+      app:layout_constraintBottom_toTopOf="@+id/left_but"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.086"
+      app:layout_constraintStart_toStartOf="parent" />
+
+  <ImageButton
+      android:id="@+id/left_but"
+      android:layout_width="100dp"
+      android:layout_height="97dp"
+      app:layout_constraintBottom_toTopOf="@+id/Teleghidare"
+      app:layout_constraintEnd_toStartOf="@+id/right_but"
+      app:layout_constraintHorizontal_bias="0.329"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.764"
+      app:srcCompat="@drawable/screenshot_35" />
+
+  <ImageButton
+      android:id="@+id/up_but"
+      android:layout_width="97dp"
+      android:layout_height="0dp"
+      android:layout_marginBottom="96dp"
+      app:layout_constraintBottom_toBottomOf="@+id/left_but"
+      app:layout_constraintDimensionRatio="h,1:1"
+      app:layout_constraintEnd_toStartOf="@+id/right_but"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toEndOf="@+id/left_but"
+      app:srcCompat="@drawable/screenshot_36" />
 
   <TextView
       android:id="@+id/textView"
@@ -89,15 +104,15 @@
       app:layout_constraintVertical_bias="0.894" />
 
   <Button
-      android:id="@+id/button7"
+      android:id="@+id/but_bluetooth"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="140dp"
-      android:onClick="Mod_Auto"
-      android:text="Mod auto"
-      app:layout_constraintBottom_toTopOf="@+id/left_but"
+      android:layout_marginBottom="16dp"
+      android:onClick="Bluetooth_b"
+      android:text="Bluetooth"
+      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.052"
-      app:layout_constraintStart_toStartOf="parent" />
+      app:layout_constraintHorizontal_bias="0.6"
+      app:layout_constraintStart_toEndOf="@+id/but_com" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
