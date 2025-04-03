@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         String pass = parola.getText().toString();
 
         if (id.equals("admin") && pass.equals("123")) {
-            Intent intent = new Intent(this, Logat.class);
+            Intent intent = new Intent(this, BluetoothActivity.class);
             startActivity(intent);
         }
     }
