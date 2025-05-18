@@ -61,34 +61,6 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         }
     };
 
-    private final BroadcastReceiver mBroadcastReceiverToggleDiscoverability = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-
-            if(action.equals(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED))
-            {
-                int mode = intent.getIntExtra(BluetoothAdapter.EXTRA_SCAN_MODE, BluetoothAdapter.ERROR);
-
-                switch (mode)
-                {
-                    case BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE:
-                        Log.d(TAG, "onReceive: Discoverability Enabled");
-                        Toast.makeText(context, "Discoverability Enabled", Toast.LENGTH_SHORT).show();
-                        break;
-                    case BluetoothAdapter.SCAN_MODE_CONNECTABLE:
-                        Log.d(TAG, "onReceive: Discoverability Disabled. Able to receive connections");
-                        Toast.makeText(context, "Discoverability Disabled. Able to receive connections.", Toast.LENGTH_SHORT).show();
-                        break;
-                    case BluetoothAdapter.SCAN_MODE_NONE:
-                        Log.d(TAG, "onReceive: Discoverability Disabled. Not able to receive connections");
-                        Toast.makeText(context, "Discoverability Disabled. Not able to receive connections", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        }
-    };
-
     private final BroadcastReceiver mBroadcastReceiverDiscoverBT = new BroadcastReceiver() {
         @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
         @Override
@@ -130,12 +102,13 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
 
-            if(action.equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED))
-            {
+            if(action.equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED)) {
+                Log.d(TAG, "Action Changed");
                 BluetoothDevice mDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                int bondState = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
+                int prevBondState = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
 
-                switch (mDevice.getBondState())
-                {
+                switch (mDevice.getBondState()) {
                     case BluetoothDevice.BOND_BONDED:
                         Log.d(TAG, "onReceive: BOND_BONDED");
                         break;
@@ -145,6 +118,12 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
                     case BluetoothDevice.BOND_NONE:
                         Log.d(TAG, "onReceive: BOND_NONE");
                         break;
+                }
+
+                if (bondState == BluetoothDevice.BOND_BONDED && prevBondState == BluetoothDevice.BOND_BONDING) {
+                    intent = new Intent(context, ManualControlActivity.class);
+                    intent.putExtra("device", mDevice.getAddress()); // assuming it's paired
+                    context.startActivity(intent);//  Pairing complete — NOW launch ManualControlActivity
                 }
             }
         }
@@ -171,7 +150,6 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
 
         // Unregisters the Broadcast Receivers
         unregisterReceiver(mBroadcastReceiverToggleBT);
-        unregisterReceiver(mBroadcastReceiverToggleDiscoverability);
         unregisterReceiver(mBroadcastReceiverDiscoverBT);
         unregisterReceiver(mBroadcastReceiverPairBT);
     }
@@ -201,25 +179,6 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         }
     }
 
-    @RequiresPermission(Manifest.permission.BLUETOOTH_ADVERTISE)
-    public void toggleDiscoverability(View v) {
-        if (mBluetoothAdapter.isEnabled()) {
-            Log.d(TAG, "toggleDiscoverability: Making device discoverable for 60 seconds");
-
-            Intent enableDiscoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            enableDiscoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60);
-            startActivity(enableDiscoverableIntent);
-
-            IntentFilter discoverableIntent = new IntentFilter(mBluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
-            registerReceiver(mBroadcastReceiverToggleDiscoverability, discoverableIntent);
-        }
-        else {
-            Log.d(TAG, "toggleDiscoverability: BLUETOOTH IS NOT ENABLED!");
-            Toast.makeText(getBaseContext().getApplicationContext(), "Please Enable Bluetooth", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    ///TO DO: Deschide lista de discover intr-un fragment
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     public void discoverBT(View v)
     {
@@ -280,14 +239,16 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mBluetoothAdapter.cancelDiscovery();        //This eats a lot of memory if not cancelled
         Log.d(TAG, "onItemClick: Chose a device");
-        String deviceName = mBTDevices.get(position).getName();
-        String deviceAddress = mBTDevices.get(position).getAddress();
+        BluetoothDevice selectedDevice = mBTDevices.get(position);
+        String deviceName = selectedDevice.getName();
+        String deviceAddress = selectedDevice.getAddress();
 
         Log.d(TAG, "onItemClick: deviceName: " + deviceName);
         Log.d(TAG, "onItemClick: deviceAddress: " + deviceAddress);
 
         Log.d(TAG, "Trying to pair with " + deviceName);
-        mBTDevices.get(position).createBond();
+        selectedDevice.createBond();
+        Toast.makeText(this, "Pairing with " + selectedDevice.getName(), Toast.LENGTH_SHORT).show();
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)

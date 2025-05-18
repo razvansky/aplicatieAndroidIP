@@ -11,36 +11,22 @@
         android:id="@+id/btnToggleBT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="120dp"
         android:onClick="toggleBT"
         android:text="Enable/Disable"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btnToggleDiscoverable"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:onClick="toggleDiscoverability"
-        android:text="Enable Discoverability"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
         android:id="@+id/btnDiscoverBT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="50dp"
         android:onClick="discoverBT"
         android:text="Discover devices"
-        app:layout_constraintBottom_toTopOf="@+id/btnToggleDiscoverable"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/btnToggleDiscoverable" />
+        app:layout_constraintTop_toTopOf="@+id/btnToggleBT" />
 
     <ListView
         android:id="@+id/lvDeviceList"
