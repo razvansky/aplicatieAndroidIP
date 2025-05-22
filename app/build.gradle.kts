@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-
+    val fragment_version = "1.6.1"
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -47,4 +47,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("androidx.fragment:fragment:$fragment_version")
+    implementation ("com.google.android.material:material:1.11.0")
 }

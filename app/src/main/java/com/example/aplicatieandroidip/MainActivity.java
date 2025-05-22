@@ -1,31 +1,30 @@
 package com.example.aplicatieandroidip;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
+    FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-    }
-    public void Conectare(View v) {
-        TextView id_con = findViewById(R.id.id_conectare);
-        String id = id_con.getText().toString();
 
-        TextView parola = findViewById(R.id.parola_conectare);
-        String pass = parola.getText().toString();
+        frameLayout = (FrameLayout) findViewById(R.id.framelayout);
 
-        if (id.equals("admin") && pass.equals("123")) {
-            Intent intent = new Intent(this, BluetoothActivity.class);
-            startActivity(intent);
-        }
+        Fragment fragment = new conectarefrag();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout,fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
     }
+
+
+
+
 }
