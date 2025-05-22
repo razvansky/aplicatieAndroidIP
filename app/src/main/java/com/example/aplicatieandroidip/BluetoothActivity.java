@@ -127,6 +127,7 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         }
     };
 
+    @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +140,11 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);      //This is broadcast only when there is an attempt at bonding
         registerReceiver(mBroadcastReceiverPairBT, filter);
         lvDeviceList.setOnItemClickListener(BluetoothActivity.this);        //Makes it so that an item can be selected
+
+        if(mBluetoothAdapter != null && mBluetoothAdapter.isEnabled())
+        {
+            discoverBT(null);
+        }
     }
 
     @Override
