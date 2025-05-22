@@ -11,6 +11,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -37,6 +38,15 @@ public class ManualControlActivity extends AppCompatActivity implements ServiceC
         findViewById(R.id.btnDown).setOnClickListener(v -> send("B"));     // B = Backward
         findViewById(R.id.btnLeft).setOnClickListener(v -> send("L"));     // L = Left
         findViewById(R.id.btnRight).setOnClickListener(v -> send("R"));    // R = Right
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        );
     }
 
     @Override
