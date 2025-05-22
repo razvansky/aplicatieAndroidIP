@@ -12,7 +12,7 @@ import android.os.Build;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.fragment.app.Fragment;
-import com.example.aplicatieandroidip.BuildConfig;
+
 
 
 public class BluetoothUtil {

@@ -121,9 +121,7 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
                 }
 
                 if (bondState == BluetoothDevice.BOND_BONDED && prevBondState == BluetoothDevice.BOND_BONDING) {
-                    intent = new Intent(context, ManualControlActivity.class);
-                    intent.putExtra("device", mDevice.getAddress()); // assuming it's paired
-                    context.startActivity(intent);//  Pairing complete — NOW launch ManualControlActivity
+                    launchManualControl(mDevice); //  Pairing complete — NOW launch ManualControlActivity
                 }
             }
         }
@@ -246,9 +244,16 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         Log.d(TAG, "onItemClick: deviceName: " + deviceName);
         Log.d(TAG, "onItemClick: deviceAddress: " + deviceAddress);
 
-        Log.d(TAG, "Trying to pair with " + deviceName);
-        selectedDevice.createBond();
-        Toast.makeText(this, "Pairing with " + selectedDevice.getName(), Toast.LENGTH_SHORT).show();
+        if(selectedDevice.getBondState() == BluetoothDevice.BOND_BONDED)
+        {
+            Log.d(TAG, "Device already paired, starting connection");
+            launchManualControl(selectedDevice);
+        }
+        else {
+            Log.d(TAG, "Trying to pair with " + deviceName);
+            selectedDevice.createBond();
+            Toast.makeText(this, "Pairing with " + selectedDevice.getName(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
@@ -263,5 +268,12 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         }
 
         discoverBT(v);
+    }
+
+    private void launchManualControl(BluetoothDevice device)
+    {
+        Intent intent = new Intent(this, ManualControlActivity.class);
+        intent.putExtra("device", device.getAddress());
+        startActivity(intent);
     }
 }
