@@ -34,7 +34,7 @@ public class bluetoothfrag extends Fragment implements AdapterView.OnItemClickLi
     public ArrayList<BluetoothDevice> mBTDevices;
     public DeviceListAdapter mDeviceListAdapter;
     ListView lvDeviceList;
-
+    public bluetoothfrag(){}
     // BroadcastReceiver-urile sunt identice, doar contextul se ia cu requireContext()
     private final BroadcastReceiver mBroadcastReceiverToggleBT = new BroadcastReceiver() {
         @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)

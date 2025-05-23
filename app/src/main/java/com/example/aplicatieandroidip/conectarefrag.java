@@ -1,67 +1,100 @@
 package com.example.aplicatieandroidip;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.widget.*;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link conectarefrag#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class conectarefrag extends Fragment {
 
-
-    public static conectarefrag newInstance() {
-        conectarefrag fragment = new conectarefrag();
-
-        return fragment;
-    }
+    private EditText usernameEdit, passwordEdit;
+    private EditText passwordEditText;
+    private CheckBox rememberMeCheck;
+    private Button loginButton;
+    private AuthService authService;
 
     public conectarefrag() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
+    public static conectarefrag newInstance() {
+        return new conectarefrag();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_conectare, container, false);
-        Button btn = view.findViewById(R.id.button_conectare);
-        btn.setOnClickListener(this::Conectare);
+
+        // Initialize UI components
+        usernameEdit = view.findViewById(R.id.id_conectare);
+        passwordEdit = view.findViewById(R.id.parola_conectare);
+        //rememberMeCheck = view.findViewById(R.id.remember_me_checkbox); // Update ID as needed
+        loginButton = view.findViewById(R.id.button_conectare);
+
+        // Setup Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://132.220.27.51/") // Don't forget trailing slash
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        authService = retrofit.create(AuthService.class);
+
+        // Button listener
+        loginButton.setOnClickListener(v -> doLogin(v));
+
         return view;
     }
 
-        private void Conectare(View v) {
+    private void doLogin(View v) {
+        String username = usernameEdit.getText().toString().trim();
+        String password = passwordEdit.getText().toString().trim();
+        boolean rememberMe = false;
 
-        View root = v.getRootView();
+        LoginRequest request = new LoginRequest(username, password, rememberMe);
 
-        TextView id_con = root.findViewById(R.id.id_conectare);
-        String id = id_con.getText().toString();
+        authService.login(request).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String token = response.body().getToken();
+                    Log.d("LOGIN", "JWT Token: " + token);
 
-        TextView parola = root.findViewById(R.id.parola_conectare);
-        String pass = parola.getText().toString();
+                    if (rememberMe) {
+                        SharedPreferences prefs = requireContext().getSharedPreferences("auth", Context.MODE_PRIVATE);
+                        prefs.edit().putString("jwt", token).apply();
+                    }
 
-        if (id.equals("admin") && pass.equals("123")) {
-            Fragment fragment = new conectatfrag();
-            FrameLayout frameLayout = (FrameLayout) v.findViewById(R.id.framelayout);
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                    Toast.makeText(getContext(), "Login successful!", Toast.LENGTH_SHORT).show();
+                    Fragment fragment = new conectatfrag();
+                    FrameLayout frameLayout = (FrameLayout) v.findViewById(R.id.framelayout);
+                    FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
 
-            transaction.replace(R.id.framelayout,fragment).addToBackStack(null).commit();
-        }
+                    transaction.replace(R.id.framelayout,fragment).addToBackStack(null).commit();
+                } else {
+                    Toast.makeText(getContext(), "Login failed! " + response.code(), Toast.LENGTH_SHORT).show();
+                    Log.e("LOGIN", "Code: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("LOGIN", "Throwable: ", t);
+            }
+        });
     }
 }

@@ -21,7 +21,7 @@ import com.google.android.material.tabs.TabLayout;
  */
 public class conectatfrag extends Fragment {
 
-
+    public conectatfrag(){}
     public static conectatfrag newInstance() {
         conectatfrag fragment = new conectatfrag();
 
@@ -83,10 +83,12 @@ public class conectatfrag extends Fragment {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
 
+
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
 
             }
         });

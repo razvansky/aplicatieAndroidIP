@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 public class controalefrag extends Fragment {
 
-
-    public static controalefrag newInstance(String param1, String param2) {
+    public controalefrag(){}
+    public static controalefrag newInstance() {
         controalefrag fragment = new controalefrag();
 
         return fragment;
