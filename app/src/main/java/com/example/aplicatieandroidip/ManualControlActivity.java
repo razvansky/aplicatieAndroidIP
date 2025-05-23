@@ -9,8 +9,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +29,54 @@ public class ManualControlActivity extends AppCompatActivity implements ServiceC
     private Connected connected = Connected.False;
     private boolean initialStart = true;
 
+    private final Handler repeatHandler = new Handler();
+    private final int repeatInterval = 100; // in milliseconds
+
+    private boolean isHoldingForward = false;
+    private boolean isHoldingBack = false;
+    private boolean isHoldingLeft = false;
+    private boolean isHoldingRight = false;
+
+    private final Runnable forwardRepeater = new Runnable() {
+        @Override
+        public void run() {
+            if (isHoldingForward) {
+                send("F");
+                repeatHandler.postDelayed(this, repeatInterval);
+            }
+        }
+    };
+
+    private final Runnable backRepeater = new Runnable() {
+        @Override
+        public void run() {
+            if (isHoldingBack) {
+                send("B");
+                repeatHandler.postDelayed(this, repeatInterval);
+            }
+        }
+    };
+
+    private final Runnable leftRepeater = new Runnable() {
+        @Override
+        public void run() {
+            if (isHoldingLeft) {
+                send("L");
+                repeatHandler.postDelayed(this, repeatInterval);
+            }
+        }
+    };
+
+    private final Runnable rightRepeater = new Runnable() {
+        @Override
+        public void run() {
+            if (isHoldingRight) {
+                send("R");
+                repeatHandler.postDelayed(this, repeatInterval);
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,11 +84,81 @@ public class ManualControlActivity extends AppCompatActivity implements ServiceC
         deviceAddress = getIntent().getStringExtra("device");
         Log.d(TAG, "Received address = " + deviceAddress);
 
-        findViewById(R.id.btnUp).setOnClickListener(v -> send("F"));  // F = Forward
-        findViewById(R.id.btnDown).setOnClickListener(v -> send("B"));     // B = Backward
-        findViewById(R.id.btnLeft).setOnClickListener(v -> send("L"));     // L = Left
-        findViewById(R.id.btnRight).setOnClickListener(v -> send("R"));    // R = Right
+        findViewById(R.id.btnUp).setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (!isHoldingForward) {
+                        isHoldingForward = true;
+                        send("F");
+                        repeatHandler.postDelayed(forwardRepeater, repeatInterval);
+                    }
+                    return true;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    isHoldingForward = false;
+                    repeatHandler.removeCallbacks(forwardRepeater);
+                    send("S");  // Stop
+                    return true;
+            }
+            return false;
+        });
 
+        findViewById(R.id.btnDown).setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (!isHoldingBack) {
+                        isHoldingBack = true;
+                        send("B");
+                        repeatHandler.postDelayed(backRepeater, repeatInterval);
+                    }
+                    return true;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    isHoldingBack = false;
+                    repeatHandler.removeCallbacks(backRepeater);
+                    send("S");
+                    return true;
+            }
+            return false;
+        });
+
+        findViewById(R.id.btnLeft).setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (!isHoldingLeft) {
+                        isHoldingLeft = true;
+                        send("L");
+                        repeatHandler.postDelayed(leftRepeater, repeatInterval);
+                    }
+                    return true;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    isHoldingLeft = false;
+                    repeatHandler.removeCallbacks(leftRepeater);
+                    send("S");
+                    return true;
+            }
+            return false;
+        });
+
+        findViewById(R.id.btnRight).setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (!isHoldingRight) {
+                        isHoldingRight = true;
+                        send("R");
+                        repeatHandler.postDelayed(rightRepeater, repeatInterval);
+                    }
+                    return true;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    isHoldingRight = false;
+                    repeatHandler.removeCallbacks(rightRepeater);
+                    send("S");
+                    return true;
+            }
+            return false;
+        });
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -135,7 +255,7 @@ public class ManualControlActivity extends AppCompatActivity implements ServiceC
         }
 
         try {
-            byte[] data = (message + "\n").getBytes();  // newline is optional
+            byte[] data = (message).getBytes();  // newline is optional
             service.write(data);
             Log.d(TAG, "Message sent" + data);
         } catch (Exception e) {
