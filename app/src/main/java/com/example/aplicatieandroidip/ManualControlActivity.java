@@ -255,7 +255,7 @@ public class ManualControlActivity extends AppCompatActivity implements ServiceC
         }
 
         try {
-            byte[] data = (message).getBytes();  // newline is optional
+            byte[] data = (message + "\n").getBytes();  // newline is optional
             service.write(data);
             Log.d(TAG, "Message sent" + data);
         } catch (Exception e) {
