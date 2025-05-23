@@ -1,5 +1,8 @@
 package com.example.aplicatieandroidip;
 
+import static android.content.pm.PackageManager.PERMISSION_DENIED;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -144,8 +147,8 @@ public class bluetoothfrag extends Fragment implements AdapterView.OnItemClickLi
     }
 
     private void checkBTPermissions(){
-        if (requireActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != 0 ||
-                requireActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != 0) {
+        if (requireActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED ||
+                requireActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_DENIED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
         }
     }
@@ -169,8 +172,9 @@ public class bluetoothfrag extends Fragment implements AdapterView.OnItemClickLi
     }
 
     private void launchManualControl(BluetoothDevice device) {
-        Intent intent = new Intent(requireContext(), ManualControlActivity.class);
-        intent.putExtra("device", device.getAddress());
-        startActivity(intent);
+        // Intent intent = new Intent(requireContext(), ManualControlActivity.class);
+        //intent.putExtra("device", device.getAddress());
+        //startActivity(intent);
+        getChildFragmentManager().beginTransaction().replace(R.id.layout_intern,new controalefrag()).commit();
     }
 }
