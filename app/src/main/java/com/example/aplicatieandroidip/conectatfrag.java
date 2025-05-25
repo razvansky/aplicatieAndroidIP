@@ -69,7 +69,7 @@ public class conectatfrag extends Fragment {
                         fragment = new principalfrag();
                         break;
                     case 1:
-                        fragment = new bluetoothfrag();
+                        fragment = new BluetoothFragment();
                         break;
                     case 2:
                         fragment = new controalefrag();

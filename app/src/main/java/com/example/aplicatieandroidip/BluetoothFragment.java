@@ -8,29 +8,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresPermission;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresPermission;
-import androidx.appcompat.app.AppCompatActivity;
-
-
 import java.util.ArrayList;
 
-public class BluetoothActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+
+public class BluetoothFragment extends Fragment implements AdapterView.OnItemClickListener {
+
     private static final String TAG = "BluetoothActivity";
     BluetoothAdapter mBluetoothAdapter;
     public ArrayList<BluetoothDevice> mBTDevices;
     public DeviceListAdapter mDeviceListAdapter;
     ListView lvDeviceList;
-
-    /*
-     * Verifica si "asculta" starile device-ului
-     * */
 
     private final BroadcastReceiver mBroadcastReceiverToggleBT = new BroadcastReceiver() {
         @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
@@ -127,66 +128,53 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         }
     };
 
-    @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_bluetooth, container, false);
+    }
+
+    @RequiresPermission(allOf = {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT})
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();       // Checks if device is capable of BT (usually is)
-        lvDeviceList = findViewById(R.id.lvDeviceList);
+        lvDeviceList = view.findViewById(R.id.lvDeviceList_frag);
         mBTDevices = new ArrayList<>();
 
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);      //This is broadcast only when there is an attempt at bonding
-        registerReceiver(mBroadcastReceiverPairBT, filter);
-        lvDeviceList.setOnItemClickListener(BluetoothActivity.this);        //Makes it so that an item can be selected
+        try {
+            requireContext().registerReceiver(mBroadcastReceiverPairBT, filter);
+        } catch (Exception e) {
+            Log.e(TAG, "Receiver registration PairBT", e);
+        }
+        lvDeviceList.setOnItemClickListener(BluetoothFragment.this);        //Makes it so that an item can be selected
+
+        Button btnToggleBT = view.findViewById(R.id.btnToggleBT_frag);
+        btnToggleBT.setOnClickListener(v -> toggleBTFrag(v));
+
+        Button btnRefreshDevices = view.findViewById(R.id.btnRefreshDevices_frag);
+        btnRefreshDevices.setOnClickListener(v -> refreshDevicesFrag(v, btnRefreshDevices));
+
+        Button btnDiscoverBT = view.findViewById(R.id.btnDiscoverBT_frag);
+        btnDiscoverBT.setOnClickListener(v -> discoverBTFrag(v, btnRefreshDevices));
+
 
         if(mBluetoothAdapter != null && mBluetoothAdapter.isEnabled())
         {
-            discoverBT(null);
+            discoverBTFrag(null, btnRefreshDevices);
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy: CALLED");
-        super.onDestroy();
-
-        // Unregisters the Broadcast Receivers
-        unregisterReceiver(mBroadcastReceiverToggleBT);
-        unregisterReceiver(mBroadcastReceiverDiscoverBT);
-        unregisterReceiver(mBroadcastReceiverPairBT);
-    }
-
-    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
-    public void toggleBT(View v){
-        if(mBluetoothAdapter == null)
-        {
-            Log.d(TAG, "toggleBT: Device not capable of Bluetooth");
-        }
-        if(!mBluetoothAdapter.isEnabled())
-        {
-            Log.d(TAG, "toggleBT: Enabling BT");
-            Intent enableBTIntent = new Intent((BluetoothAdapter.ACTION_REQUEST_ENABLE));
-            startActivity(enableBTIntent);
-
-            IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            registerReceiver(mBroadcastReceiverToggleBT, BTIntent); //Tells the receiver the state of the device
-        }
-        if(mBluetoothAdapter.isEnabled())
-        {
-            Log.d(TAG, "toggleBT: Disabling BT");
-            mBluetoothAdapter.disable();
-
-            IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            registerReceiver(mBroadcastReceiverToggleBT, BTIntent);
-        }
-    }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
-    public void discoverBT(View v)
+    public void discoverBTFrag(View v, Button btnRefreshDevices)
     {
-        Button btnRefreshDevices = findViewById(R.id.btnRefreshDevices);
         if(mBluetoothAdapter.isEnabled()) {
             Log.d(TAG, "discoverBT: Looking for unpaired devices.");
             btnRefreshDevices.setVisibility(View.VISIBLE);
@@ -201,7 +189,11 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
 
             mBluetoothAdapter.startDiscovery();
             IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            registerReceiver(mBroadcastReceiverDiscoverBT, discoverDevicesIntent);
+            try {
+                requireContext().registerReceiver(mBroadcastReceiverDiscoverBT, discoverDevicesIntent);
+            } catch (Exception e) {
+                Log.e(TAG, "Register Discover Fail", e);
+            }
             new android.os.Handler().postDelayed(() -> {
                 if (mBluetoothAdapter.isDiscovering()) {
                     mBluetoothAdapter.cancelDiscovery();
@@ -212,15 +204,16 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         }
         else{
             Log.d(TAG, "toggleDiscoverability: BLUETOOTH IS NOT ENABLED!");
-            Toast.makeText(getBaseContext().getApplicationContext(), "Please Enable Bluetooth", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Please Enable Bluetooth", Toast.LENGTH_SHORT).show();
             btnRefreshDevices.setVisibility(View.VISIBLE);
             btnRefreshDevices.setEnabled(false);
         }
     }
+
     private void checkBTPermissions()               //Android 6.0+ needs to check some permissions in order to be able to discover other devices
     {
-        int permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
-        permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COURSE_LOCATION");
+        int permissionCheck = getContext().checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
+        permissionCheck += getContext().checkSelfPermission("Manifest.permission.ACCESS_COURSE_LOCATION");
         if(permissionCheck != 0)
         {
             this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
@@ -236,6 +229,13 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
             }
         }
         return false;
+    }
+
+    private void launchManualControl(BluetoothDevice device)
+    {
+        Intent intent = new Intent(this.getContext(), ManualControlActivity.class);
+        intent.putExtra("device", device.getAddress());
+        startActivity(intent);
     }
 
     @RequiresPermission(allOf = {Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT})
@@ -258,13 +258,12 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         else {
             Log.d(TAG, "Trying to pair with " + deviceName);
             selectedDevice.createBond();
-            Toast.makeText(this, "Pairing with " + selectedDevice.getName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Pairing with " + selectedDevice.getName(), Toast.LENGTH_SHORT).show();
         }
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
-    public void refreshDevices(View v)
-    {
+    public void refreshDevicesFrag(View view, Button btnRefreshDevices) {
         Log.d(TAG, "refreshDevices: Refreshing available devices...");
 
         mBTDevices.clear();
@@ -273,13 +272,40 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
             mDeviceListAdapter.notifyDataSetChanged();
         }
 
-        discoverBT(v);
+        discoverBTFrag(view, btnRefreshDevices);
     }
 
-    private void launchManualControl(BluetoothDevice device)
-    {
-        Intent intent = new Intent(this, ManualControlActivity.class);
-        intent.putExtra("device", device.getAddress());
-        startActivity(intent);
+
+    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+    public void toggleBTFrag(View view) {
+        if(mBluetoothAdapter == null)
+        {
+            Log.d(TAG, "toggleBTFrag: Device not capable of Bluetooth");
+        }
+        if(!mBluetoothAdapter.isEnabled())
+        {
+            Log.d(TAG, "toggleBTFrag: Enabling BT");
+            Intent enableBTIntent = new Intent((BluetoothAdapter.ACTION_REQUEST_ENABLE));
+            startActivity(enableBTIntent);
+
+            IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            try {
+                requireContext().registerReceiver(mBroadcastReceiverToggleBT, BTIntent);        //Tells the receiver the state of the device
+            } catch (Exception e) {
+                Log.e(TAG, "Register ToggleBT Fail", e);
+            }
+        }
+        if(mBluetoothAdapter.isEnabled())
+        {
+            Log.d(TAG, "toggleBTFrag: Disabling BT");
+            mBluetoothAdapter.disable();
+
+            IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            try {
+                requireContext().registerReceiver(mBroadcastReceiverToggleBT, BTIntent);
+            } catch (Exception e) {
+                Log.e(TAG, "Register ToggleBT Fail", e);
+            }
+        }
     }
 }
