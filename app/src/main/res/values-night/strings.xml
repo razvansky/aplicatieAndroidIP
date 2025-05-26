@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Connect">Conectare</string>
+    <string name="Password">Password</string>
+    <string name="ID">Email</string>
+    <string name="LoginText">Bun venit in aplicatia de control</string>
+    <string name="HomeText">principal</string>
+</resources>

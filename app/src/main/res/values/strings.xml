@@ -6,6 +6,10 @@
     <string name="bluetooth_permission_grant">Bluetooth permission is required by this App. Please grant in next dialog.</string>
     <string name="bluetooth_permission_denied">Bluetooth permission was permanently denied. You have to enable permission \"%s\" in App settings.</string>
     <string name="title_activity_manual_control">ManualControlActivity</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="Connect">Conectare</string>
+    <string name="Password">Password</string>
+    <string name="ID">Email</string>
+    <string name="LoginText">Bun venit in aplicatia de control</string>
+    <string name="HomeText">Bine ai venit!</string>
 </resources>

@@ -2,31 +2,27 @@ package com.example.aplicatieandroidip;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link conectarefrag#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
-public class conectarefrag extends Fragment {
+
+public class LoginFragment extends Fragment {
 
 
-    public static conectarefrag newInstance() {
-        conectarefrag fragment = new conectarefrag();
+    public static LoginFragment newInstance() {
+        LoginFragment fragment = new LoginFragment();
 
         return fragment;
     }
 
-    public conectarefrag() {
+    public LoginFragment() {
         // Required empty public constructor
     }
 
@@ -57,11 +53,8 @@ public class conectarefrag extends Fragment {
         String pass = parola.getText().toString();
 
         if (id.equals("admin") && pass.equals("123")) {
-            Fragment fragment = new principalfrag();
-            FrameLayout frameLayout = (FrameLayout) v.findViewById(R.id.framelayout);
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-
-            transaction.replace(R.id.framelayout,fragment).addToBackStack(null).commit();
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_LoginFragment_to_principalfrag);
         }
     }
 }
