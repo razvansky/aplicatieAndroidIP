@@ -57,7 +57,7 @@ public class conectarefrag extends Fragment {
         String pass = parola.getText().toString();
 
         if (id.equals("admin") && pass.equals("123")) {
-            Fragment fragment = new conectatfrag();
+            Fragment fragment = new principalfrag();
             FrameLayout frameLayout = (FrameLayout) v.findViewById(R.id.framelayout);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
 
