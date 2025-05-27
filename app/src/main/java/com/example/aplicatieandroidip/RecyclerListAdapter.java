@@ -49,13 +49,13 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                 if(item.getItemId() == R.id.menu_view_details) {
                     // Navigate to Details
                     navController = Navigation.findNavController(v);
-                    navController.navigate(R.id.action_principalfrag_to_PacientDetailsFragment);
+                    navController.navigate(R.id.action_HomeFragment_to_PacientDetailsFragment);
                     return true;
                 }
                 else if(item.getItemId() == R.id.menu_order_robot) {
                     // Navigate to BluetoothFrag
                     navController = Navigation.findNavController(v);
-                    navController.navigate(R.id.action_principalfrag_to_BluetoothFragment);
+                    navController.navigate(R.id.action_HomeFragment_to_BluetoothFragment);
                     return true;
                 }
                 else

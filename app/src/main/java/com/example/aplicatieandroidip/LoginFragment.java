@@ -1,5 +1,7 @@
 package com.example.aplicatieandroidip;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
@@ -54,7 +56,9 @@ public class LoginFragment extends Fragment {
 
         if (id.equals("admin") && pass.equals("123")) {
             NavController navController = Navigation.findNavController(v);
-            navController.navigate(R.id.action_LoginFragment_to_principalfrag);
+            navController.navigate(R.id.action_LoginFragment_to_HomeFragment);
+            SharedPreferences prefs = requireActivity().getSharedPreferences("UsernameLogin", Context.MODE_PRIVATE);
+            prefs.edit().putString("username", id).apply();
         }
     }
 }

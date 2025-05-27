@@ -11,7 +11,7 @@
     <string name="Password">Password:</string>
     <string name="ID">ID:</string>
     <string name="LoginText">Bun venit in aplicatia de control</string>
-    <string name="HomeText">Bine ai venit!</string>
+    <string name="HomeText">Bine ai venit, </string>
 
     <string name="PacientName">Popescu Marian</string>
     <string name="PacientID">1</string>
@@ -28,6 +28,4 @@
 
     <string name="PacientOption1">View Details</string>
     <string name="PacientOption2">Order Robot</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

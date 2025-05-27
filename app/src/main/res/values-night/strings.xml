@@ -12,7 +12,7 @@
     <string name="Password">Password:</string>
     <string name="ID">ID:</string>
     <string name="LoginText">Bun venit in aplicatia de control</string>
-    <string name="HomeText">Bine ai venit!</string>
+    <string name="HomeText">Bine ai venit, </string>
 
     <string name="PacientName">Popescu Marian</string>
     <string name="PacientID">1</string>

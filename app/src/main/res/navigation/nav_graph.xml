@@ -9,19 +9,19 @@
         android:name="com.example.aplicatieandroidip.LoginFragment"
         android:label="Login">
         <action
-            android:id="@+id/action_LoginFragment_to_principalfrag"
-            app:destination="@id/principalfrag" />
+            android:id="@+id/action_LoginFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/principalfrag"
-        android:name="com.example.aplicatieandroidip.principalfrag"
+        android:id="@+id/HomeFragment"
+        android:name="com.example.aplicatieandroidip.HomeFragment"
         android:label="Home">
         <action
-            android:id="@+id/action_principalfrag_to_BluetoothFragment"
+            android:id="@+id/action_HomeFragment_to_BluetoothFragment"
             app:destination="@id/BluetoothFragment" />
         <action
-            android:id="@+id/action_principalfrag_to_PacientDetailsFragment"
+            android:id="@+id/action_HomeFragment_to_PacientDetailsFragment"
             app:destination="@id/PacientDetailsFragment" />
     </fragment>
 
