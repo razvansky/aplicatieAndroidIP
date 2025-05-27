@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">MediPort</string>
+    <string name="devices">Bluetooth Devices</string>
+
+    <string name="bluetooth_permission_title">Bluetooth permission</string>
+    <string name="bluetooth_permission_grant">Bluetooth permission is required by this App. Please grant in next dialog.</string>
+    <string name="bluetooth_permission_denied">Bluetooth permission was permanently denied. You have to enable permission \"%s\" in App settings.</string>
+    <string name="title_activity_manual_control">ManualControlActivity</string>
+
     <string name="Connect">Conectare</string>
-    <string name="Password">Password</string>
-    <string name="ID">Email</string>
+    <string name="Password">Password:</string>
+    <string name="ID">ID:</string>
     <string name="LoginText">Bun venit in aplicatia de control</string>
-    <string name="HomeText">principal</string>
+    <string name="HomeText">Bine ai venit!</string>
+
+    <string name="PacientName">Popescu Marian</string>
+    <string name="PacientID">1</string>
+
+    <string-array name="pacient_name_txt">
+        <item>Popescu Marian</item>
+        <item>Popescu Maria</item>
+    </string-array>
+
+    <string-array name="pacient_id_txt">
+        <item>225200</item>
+        <item>225201</item>
+    </string-array>
+
+    <string name="PacientOption1">View Details</string>
+    <string name="PacientOption2">Order Robot</string>
 </resources>

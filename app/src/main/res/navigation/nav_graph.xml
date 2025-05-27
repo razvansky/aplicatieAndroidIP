@@ -18,13 +18,21 @@
         android:name="com.example.aplicatieandroidip.principalfrag"
         android:label="Home">
         <action
-            android:id="@+id/action_principalfrag_to_bluetoothfrag"
-            app:destination="@id/bluetoothfrag" />
+            android:id="@+id/action_principalfrag_to_BluetoothFragment"
+            app:destination="@id/BluetoothFragment" />
+        <action
+            android:id="@+id/action_principalfrag_to_PacientDetailsFragment"
+            app:destination="@id/PacientDetailsFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/bluetoothfrag"
+        android:id="@+id/BluetoothFragment"
         android:name="com.example.aplicatieandroidip.BluetoothFragment"
         android:label="Manual Control" />
+
+    <fragment
+        android:id="@+id/PacientDetailsFragment"
+        android:name="com.example.aplicatieandroidip.PacientDetalisFragment"
+        android:label="Patient Details" />
 
 </navigation>

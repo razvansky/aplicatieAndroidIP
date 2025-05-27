@@ -42,7 +42,7 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-        private void Conectare(View v) {
+    private void Conectare(View v) {
 
         View root = v.getRootView();
 

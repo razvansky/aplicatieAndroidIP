@@ -1,0 +1,86 @@
+package com.example.aplicatieandroidip;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.TextView;
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.ViewHolder> {
+
+    private final List<Pacient> pacientList;
+    private final Context context;
+    NavController navController;
+
+    public RecyclerListAdapter(Context context, List<Pacient> pacientList)
+    {
+        this.context = context;
+        this.pacientList = pacientList;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        //inflate row
+
+        View view = LayoutInflater.from(context).inflate(R.layout.item_pacient, parent ,false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerListAdapter.ViewHolder holder, int position) {
+        //assign values based on position
+
+        holder.name.setText(pacientList.get(position).getPacientName());
+        holder.id.setText(pacientList.get(position).getPacientID());
+        holder.image.setImageResource(pacientList.get(position).getPacientImage());
+        holder.itemView.setOnClickListener(v -> {
+            PopupMenu menu = new PopupMenu(context, v);
+            menu.getMenuInflater().inflate(R.menu.pacient_options, menu.getMenu());
+            menu.setOnMenuItemClickListener(item -> {
+                if(item.getItemId() == R.id.menu_view_details) {
+                    // Navigate to Details
+                    navController = Navigation.findNavController(v);
+                    navController.navigate(R.id.action_principalfrag_to_PacientDetailsFragment);
+                    return true;
+                }
+                else if(item.getItemId() == R.id.menu_order_robot) {
+                    // Navigate to BluetoothFrag
+                    navController = Navigation.findNavController(v);
+                    navController.navigate(R.id.action_principalfrag_to_BluetoothFragment);
+                    return true;
+                }
+                else
+                    return false;
+            });
+            menu.show();
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        //total items
+        return pacientList.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+        //grabs the views from row layout
+
+        ImageView image;
+        TextView name, id;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            name = itemView.findViewById(R.id.pacient_name);
+            id = itemView.findViewById(R.id.pacient_id_value);
+            image = itemView.findViewById(R.id.pacient_image);
+        }
+    }
+}
