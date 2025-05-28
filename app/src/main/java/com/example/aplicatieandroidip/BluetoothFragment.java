@@ -144,6 +144,10 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
         super.onViewCreated(view, savedInstanceState);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();       // Checks if device is capable of BT (usually is)
+        if(mBluetoothAdapter == null){
+            Toast.makeText(getContext(), "Bluetooth not supported on this device.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         lvDeviceList = view.findViewById(R.id.lvDeviceList_frag);
         mBTDevices = new ArrayList<>();
 
@@ -156,13 +160,11 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
         lvDeviceList.setOnItemClickListener(BluetoothFragment.this);        //Makes it so that an item can be selected
 
         Button btnToggleBT = view.findViewById(R.id.btnToggleBT_frag);
-        btnToggleBT.setOnClickListener(v -> toggleBTFrag(v));
+        btnToggleBT.setOnClickListener(v -> toggleBTFrag());
 
         Button btnRefreshDevices = view.findViewById(R.id.btnRefreshDevices_frag);
         btnRefreshDevices.setOnClickListener(v -> refreshDevicesFrag(v, btnRefreshDevices));
 
-        Button btnDiscoverBT = view.findViewById(R.id.btnDiscoverBT_frag);
-        btnDiscoverBT.setOnClickListener(v -> discoverBTFrag(v, btnRefreshDevices));
 
 
         if(mBluetoothAdapter != null && mBluetoothAdapter.isEnabled())
@@ -171,6 +173,23 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
         }
     }
 
+    @Override
+    @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
+    public void onDestroyView(){
+        super.onDestroyView();
+
+        if(mBluetoothAdapter != null && mBluetoothAdapter.isDiscovering()){
+            mBluetoothAdapter.cancelDiscovery();
+        }
+
+        try {
+            requireActivity().unregisterReceiver(mBroadcastReceiverPairBT);
+            requireActivity().unregisterReceiver(mBroadcastReceiverToggleBT);
+            requireActivity().unregisterReceiver(mBroadcastReceiverDiscoverBT);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Receiver not registered");
+        }
+    }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     public void discoverBTFrag(View v, Button btnRefreshDevices)
@@ -277,7 +296,7 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
 
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
-    public void toggleBTFrag(View view) {
+    public void toggleBTFrag() {
         if(mBluetoothAdapter == null)
         {
             Log.d(TAG, "toggleBTFrag: Device not capable of Bluetooth");
