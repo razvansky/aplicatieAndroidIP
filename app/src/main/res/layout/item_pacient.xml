@@ -6,20 +6,19 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         app:cardBackgroundColor="@color/blackGradient"
         app:cardCornerRadius="20dp"
         app:cardElevation="8dp"
-        >
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -41,10 +40,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="24dp"
-                android:text="@string/PacientID"
+                android:layout_marginBottom="8dp"
                 android:fontFamily="@font/poppins_light"
+                android:text="@string/PacientID"
                 android:textColor="@color/blue"
                 android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/pacient_id"
                 app:layout_constraintTop_toBottomOf="@+id/pacient_name" />
 
@@ -53,13 +54,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/poppins_light"
                 android:text="@string/PacientName"
                 android:textColor="@color/blue"
+
                 android:textSize="20dp"
                 android:textStyle="bold"
-                android:fontFamily="@font/poppins_light"
-
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/pacient_image"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -69,10 +73,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/poppins_light"
                 android:text="@string/ID"
                 android:textColor="@color/blue"
                 android:textSize="14dp"
-                android:fontFamily="@font/poppins_light"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/pacient_image"
                 app:layout_constraintTop_toBottomOf="@+id/pacient_name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
