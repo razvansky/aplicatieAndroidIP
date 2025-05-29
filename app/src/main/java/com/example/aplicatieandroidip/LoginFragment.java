@@ -2,6 +2,7 @@ package com.example.aplicatieandroidip;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.nfc.Tag;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
@@ -28,16 +29,7 @@ import java.net.URL;
 
 public class LoginFragment extends Fragment {
 
-
-    public static LoginFragment newInstance() {
-        LoginFragment fragment = new LoginFragment();
-
-        return fragment;
-    }
-
-    public LoginFragment() {
-        // Required empty public constructor
-    }
+    private static final String TAG="LoginFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,17 +77,17 @@ public class LoginFragment extends Fragment {
                 conn.setDoOutput(true);
 
                 String jsonInputString = String.format("{\"username\": \"%s\", \"password\": \"%s\", \"rememberMe\": false}", id, password);
-                Log.d("LoginFragment", "Sending JSON: " + jsonInputString);
+                Log.d(TAG, "Sending JSON: " + jsonInputString);
 
                 try (OutputStream os = conn.getOutputStream()) {
                     byte[] input = jsonInputString.getBytes("utf-8");
-                    Log.d("LoginFragment", "Writing...");
+                    Log.d(TAG, "Writing...");
                     os.write(input, 0, input.length);
-                    Log.d("LoginFragment", "Input successful");
+                    Log.d(TAG, "Input successful");
                 }
 
                 int code = conn.getResponseCode();
-                Log.d("LoginFragment", "HTTP response code: " + code);
+                Log.d(TAG, "HTTP response code: " + code);
 
                 InputStream responseStream = (code >= 200 && code < 300) ?
                         conn.getInputStream() : conn.getErrorStream();
@@ -106,18 +98,21 @@ public class LoginFragment extends Fragment {
                 while ((line = reader.readLine()) != null) {
                     response.append(line.trim());
                 }
-                Log.d("LoginFragment", "Raw response: " + response.toString());
+                Log.d(TAG, "Raw response: " + response.toString());
 
                 JSONObject jsonResponse = new JSONObject(response.toString());
-                Log.d("LoginFragment", "Parsed token: " + jsonResponse.optString("access_token", "none"));
+                Log.d(TAG, "Parsed token: " + jsonResponse.optString("access_token", "none"));
                 String token = jsonResponse.optString("access_token", null);
 
                 if (token != null && !token.isEmpty()) {
                     requireActivity().runOnUiThread(() -> {
                         Toast.makeText(getContext(), "Login successful", Toast.LENGTH_SHORT).show();
 
-                        SharedPreferences prefs = requireActivity().getSharedPreferences("UsernameLogin", Context.MODE_PRIVATE);
-                        prefs.edit().putString("username", id).apply();
+                        SharedPreferences prefs = requireActivity().getSharedPreferences("LoginPreferences", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("Username", id).apply();
+                        editor.putString("Access_token", token).apply();
+                        editor.apply();
 
                         // Navigate to next fragment or activity
                         NavController navController = Navigation.findNavController(requireView());
