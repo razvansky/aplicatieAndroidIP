@@ -1,5 +1,8 @@
 package com.example.aplicatieandroidip;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -54,8 +59,22 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                 }
                 else if(item.getItemId() == R.id.menu_order_robot) {
                     // Navigate to BluetoothFrag
-                    navController = Navigation.findNavController(v);
-                    navController.navigate(R.id.action_HomeFragment_to_BluetoothFragment);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
+                    builder.setTitle("Select Order Type")
+                            .setMessage("How do you want to place the order?")
+                            .setPositiveButton("Automatically", (dialog, which) -> {
+                                // Handle automatic ordering
+                                Toast.makeText(this.context, "Automatic order selected", Toast.LENGTH_SHORT).show();
+                                // callAutomaticOrder();
+                            })
+                            .setNegativeButton("Manually", (dialog, which) -> {
+                                // Handle manual ordering
+                                Toast.makeText(this.context, "Manual order selected", Toast.LENGTH_SHORT).show();
+                                navController = Navigation.findNavController(v);
+                                navController.navigate(R.id.action_HomeFragment_to_BluetoothFragment);
+                            })
+                            .setNeutralButton("Cancel", null)
+                            .show();
                     return true;
                 }
                 else
