@@ -54,18 +54,6 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-    private void Conectare(View v) {
-
-        View root = v.getRootView();
-
-        TextView id_con = root.findViewById(R.id.id_conectare);
-        String id = id_con.getText().toString();
-
-        TextView parola = root.findViewById(R.id.parola_conectare);
-        String pass = parola.getText().toString();
-
-    }
-
     private void loginToCloud(String id, String password) {
         new Thread(() -> {
             try {

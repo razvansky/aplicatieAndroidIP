@@ -1,9 +1,12 @@
 package com.example.aplicatieandroidip;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +41,7 @@ public class HomeFragment extends Fragment {
     String username;
     String token;
     private ProgressBar progressBar;
+    RecyclerListAdapter adapter;
 
 
     @Override
@@ -45,6 +50,12 @@ public class HomeFragment extends Fragment {
         SharedPreferences prefs = requireActivity().getSharedPreferences("LoginPreferences", Context.MODE_PRIVATE);
         username = prefs.getString("Username", null);
         token = prefs.getString("Access_token", null);
+        if (token != null) {
+            fetchPacients(token);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "No token found", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -56,20 +67,24 @@ public class HomeFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBarLoading);
         progressBar.setVisibility(View.VISIBLE);
 
-        if (token != null) {
-            fetchPacients(token);
-        } else {
+        RecyclerView recyclerView = view.findViewById(R.id.homeRecyclerView);
+        if(adapter != null) {
             progressBar.setVisibility(View.GONE);
-            Toast.makeText(getContext(), "No token found", Toast.LENGTH_SHORT).show();
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         }
-
 
         TextView welcomeText = view.findViewById(R.id.tvWelcome);
         welcomeText.setText("Welcome, " + username + "\nHere is your data:");
         return view;
     }
 
-   /* private void setUpPacientList(){
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    /* private void setUpPacientList(){
         String[] pacientNames = getResources().getStringArray(R.array.pacient_name_txt);
         String[] pacientIDS = getResources().getStringArray(R.array.pacient_id_txt);
 
@@ -126,7 +141,7 @@ public class HomeFragment extends Fragment {
                                                                     // setUpPacientList();
                     progressBar.setVisibility(View.GONE);
                     RecyclerView recyclerView = requireView().findViewById(R.id.homeRecyclerView);
-                    RecyclerListAdapter adapter = new RecyclerListAdapter(this.getContext(), pacientList);
+                    adapter = new RecyclerListAdapter(this.getContext(), pacientList);
                     recyclerView.setAdapter(adapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
                 });
