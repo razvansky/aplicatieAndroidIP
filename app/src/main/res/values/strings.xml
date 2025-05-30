@@ -13,10 +13,24 @@
     <string name="LoginText">Bun venit in aplicatia de control</string>
     <string name="HomeText">Bine ai venit, </string>
 
-    <string name="Pacient">Pacient</string>
+    <string name="Pacient">Pacient Details</string>
     <string name="PacientName">%1$s</string>
     <string name="PacientID">CNP: %1$s</string>
     <string name="PacientPhoneNo">Phone no.: %1$s</string>
+    <string name="PacientEmail">Email: %1$s</string>
+    <string name="PacientCounty">County: %1$s</string>
+    <string name="PacientCity">City: %1$s</string>
+    <string name="PacientAddress">Street: %1$s, Nr. %2$d, Sc. %3$c, Ap. %4$d</string>
+    <string name="PacientJobName">Job Name: %1$s</string>
+    <string name="PacientJobWorkplace">Job Workplace: %1$s</string>
+    <string name="PacientGender">%1$s</string>
+    <string name="PacientBloodGroup">Blood Group: %1$s</string>
+    <string name="PacientRH">RH: %1$c</string>
+    <string name="PacientBed">Bed ID: %1$s</string>
+
+    <string name="Address">Address</string>
+    <string name="MedInfo">Medical Information</string>
+    <string name="ProInfo">Professional Information</string>
 
     <string name="PacientOption1">View Details</string>
     <string name="PacientOption2">Order Robot</string>
