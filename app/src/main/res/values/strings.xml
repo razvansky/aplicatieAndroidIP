@@ -13,21 +13,16 @@
     <string name="LoginText">Bun venit in aplicatia de control</string>
     <string name="HomeText">Bine ai venit, </string>
 
-    <string name="PacientName">Popescu Marian</string>
-    <string name="PacientID">1</string>
-
-    <string-array name="pacient_name_txt">
-        <item>Popescu Marian</item>
-        <item>Popescu Maria</item>
-    </string-array>
-
-    <string-array name="pacient_id_txt">
-        <item>225200</item>
-        <item>225201</item>
-    </string-array>
+    <string name="Pacient">Pacient</string>
+    <string name="PacientName">%1$s</string>
+    <string name="PacientID">CNP: %1$s</string>
+    <string name="PacientPhoneNo">Phone no.: %1$s</string>
 
     <string name="PacientOption1">View Details</string>
     <string name="PacientOption2">Order Robot</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="CancelButton">Cancel Order</string>
+    <string name="ConfirmButton">Confirm Order</string>
+
+    <string name="Prescription">Prescription List</string>
 </resources>

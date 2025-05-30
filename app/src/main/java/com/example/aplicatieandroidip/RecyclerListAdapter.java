@@ -4,6 +4,7 @@ import static androidx.core.content.ContentProviderCompat.requireContext;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +44,11 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     @Override
     public void onBindViewHolder(@NonNull RecyclerListAdapter.ViewHolder holder, int position) {
         //assign values based on position
+        Pacient pacient = pacientList.get(position);
+        holder.name.setText(pacient.getPacientName());
+        holder.id.setText(pacient.getPacientID());
+        holder.image.setImageResource(pacient.getPacientImage());
 
-        holder.name.setText(pacientList.get(position).getPacientName());
-        holder.id.setText(pacientList.get(position).getPacientID());
-        holder.image.setImageResource(pacientList.get(position).getPacientImage());
         holder.itemView.setOnClickListener(v -> {
             PopupMenu menu = new PopupMenu(context, v);
             menu.getMenuInflater().inflate(R.menu.pacient_options, menu.getMenu());
@@ -65,7 +67,14 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                             .setPositiveButton("Automatically", (dialog, which) -> {
                                 // Handle automatic ordering
                                 Toast.makeText(this.context, "Automatic order selected", Toast.LENGTH_SHORT).show();
-                                // callAutomaticOrder();
+
+                                Bundle args = new Bundle();
+                                args.putString("name", pacient.getPacientName());
+                                args.putString("cnp", pacient.getPacientID());
+                                args.putString("phoneNo", pacient.getPacientPhoneNo());
+
+                                navController = Navigation.findNavController(v);
+                                navController.navigate(R.id.action_HomeFragment_to_AutomaticOrderFragment, args);
                             })
                             .setNegativeButton("Manually", (dialog, which) -> {
                                 // Handle manual ordering

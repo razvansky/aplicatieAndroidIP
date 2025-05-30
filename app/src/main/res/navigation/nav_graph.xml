@@ -23,6 +23,14 @@
         <action
             android:id="@+id/action_HomeFragment_to_PacientDetailsFragment"
             app:destination="@id/PacientDetailsFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_AutomaticOrderFragment"
+            app:destination="@+id/AutomaticOrderFragment" />
+
+        <!--Logout-->
+        <action
+            android:id="@+id/action_HomeFragment_to_LoginFragment"
+            app:destination="@+id/LoginFragment" />
     </fragment>
 
     <fragment
@@ -35,4 +43,14 @@
         android:name="com.example.aplicatieandroidip.PacientDetalisFragment"
         android:label="Patient Details" />
 
+    <fragment
+        android:id="@+id/AutomaticOrderFragment"
+        android:name="com.example.aplicatieandroidip.AutomaticOrderFragment"
+        android:label="Automatic Order">
+
+        <!--Back-->
+        <action
+            android:id="@+id/action_AutomaticOrderFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
+    </fragment>
 </navigation>
