@@ -55,8 +55,11 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
             menu.setOnMenuItemClickListener(item -> {
                 if(item.getItemId() == R.id.menu_view_details) {
                     // Navigate to Details
+                    Bundle args = new Bundle();
+                    args.putString("cnp", pacient.getPacientID());
+
                     navController = Navigation.findNavController(v);
-                    navController.navigate(R.id.action_HomeFragment_to_PacientDetailsFragment);
+                    navController.navigate(R.id.action_HomeFragment_to_PacientDetailsFragment, args);
                     return true;
                 }
                 else if(item.getItemId() == R.id.menu_order_robot) {
