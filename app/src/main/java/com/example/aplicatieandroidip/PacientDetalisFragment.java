@@ -60,10 +60,12 @@ public class PacientDetalisFragment extends Fragment {
                 while ((line = reader.readLine()) != null) response.append(line);
 
                 JSONArray pacients = new JSONArray(response.toString());
+                Log.d("PacientDetails","Raw response" + response.toString());
 
                 for (int i = 0; i < pacients.length(); i++) {
                     JSONObject obj = pacients.getJSONObject(i);
                     if(cnp.equals(obj.optString("cnp", ""))) {
+                        Log.d("PacientDetails", "CNP is valid");
                         fullName = obj.optString("nume", "") + " " + obj.optString("prenume", "");
                         address = obj.optString("strada", "") + " nr. "
                                 + obj.optInt("nr_strada", 0) + " sc. "

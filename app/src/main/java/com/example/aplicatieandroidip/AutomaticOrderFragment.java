@@ -210,7 +210,7 @@ public class AutomaticOrderFragment extends Fragment {
                 payload.put("ora", time);
                 payload.put("data", timestamp);
                 payload.put("id_angajat", idAngajat);
-                payload.put("id_pat", idPat);
+                payload.put("id_pat", "132");
                 payload.put("status", "Plasata");
                 payload.put("id_prescriptie", idPrescriptie);
 
