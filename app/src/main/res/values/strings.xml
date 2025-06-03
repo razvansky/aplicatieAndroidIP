@@ -39,4 +39,10 @@
     <string name="ConfirmButton">Confirm Order</string>
 
     <string name="Prescription">Prescription List</string>
+
+    <string name="OrderTitle">Order for: %1$s</string>
+    <string name="OrderPlaced">Order Placed at: %1$s</string>
+    <string name="OrderProcessed">Order Processed at: %1$s</string>
+    <string name="OrderTransit">Order In Transit at: %1$s</string>
+    <string name="OrderFinished">Order Arrived at: %1$s</string>
 </resources>

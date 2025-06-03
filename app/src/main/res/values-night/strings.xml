@@ -14,7 +14,7 @@
     <string name="LoginText">Bun venit in aplicatia de control</string>
     <string name="HomeText">Bine ai venit, </string>
 
-    <string name="Pacient">Pacient</string>
+    <string name="Pacient">Pacient Details</string>
     <string name="PacientName">%1$s</string>
     <string name="PacientID">CNP: %1$s</string>
     <string name="PacientPhoneNo">Phone no.: %1$s</string>
@@ -40,4 +40,10 @@
     <string name="ConfirmButton">Confirm Order</string>
 
     <string name="Prescription">Prescription List</string>
+
+    <string name="OrderTitle">Order for: %1$s</string>
+    <string name="OrderPlaced">Order Placed at: %1$s</string>
+    <string name="OrderProcessed">Order Processed at: %1$s</string>
+    <string name="OrderTransit">Order In Transit at: %1$s</string>
+    <string name="OrderFinished">Order Arrived at: %1$s</string>
 </resources>

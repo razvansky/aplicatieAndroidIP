@@ -127,9 +127,12 @@ public class HomeFragment extends Fragment {
                 for (int i = 0; i < pacientArray.length(); i++) {
                     JSONObject obj = pacientArray.getJSONObject(i);
                     Pacient p = new Pacient(
-                            obj.optString("nume", ""),
-                            obj.optString("CNP", ""), // adjust fields based on actual response
-                            R.drawable.ic_pacienticon
+                            obj.optString("nume", "") + " " + obj.optString("prenume", ""),
+                            obj.optString("CNP", ""),
+                            // adjust fields based on actual response
+                            R.drawable.ic_pacienticon,
+                            obj.optString("telefon", ""),
+                            obj.optString("id_pat", "")
                     );
 
                     Log.d(TAG, "Parsed pacient: " + p.toString());

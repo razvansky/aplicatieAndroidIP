@@ -72,6 +72,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                                 args.putString("name", pacient.getPacientName());
                                 args.putString("cnp", pacient.getPacientID());
                                 args.putString("phoneNo", pacient.getPacientPhoneNo());
+                                args.putString("id_pat", pacient.getPacientPat());
 
                                 navController = Navigation.findNavController(v);
                                 navController.navigate(R.id.action_HomeFragment_to_AutomaticOrderFragment, args);

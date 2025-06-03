@@ -5,18 +5,16 @@ public class Pacient {
     String pacientID;
     int pacientImage;
     String pacientPhoneNo;
+    String pacientPat;
 
-    public Pacient(String pacientName, String pacientID, int pacientImage) {
+    public Pacient(String pacientName, String pacientID, int pacientImage, String pacientPhoneNo, String pacientPat) {
         this.pacientName = pacientName;
         this.pacientID = pacientID;
         this.pacientImage = pacientImage;
+        this.pacientPhoneNo = pacientPhoneNo;
+        this.pacientPat = pacientPat;
     }
 
-    public Pacient(String pacientName, String pacientID, String pacientPhoneNo) {
-        this.pacientName = pacientName;
-        this.pacientID = pacientID;
-        this.pacientPhoneNo = pacientPhoneNo;
-    }
 
     public String getPacientName() {
         return pacientName;
@@ -32,5 +30,9 @@ public class Pacient {
 
     public String getPacientPhoneNo() {
         return pacientPhoneNo;
+    }
+
+    public String getPacientPat() {
+        return pacientPat;
     }
 }

@@ -47,10 +47,23 @@
         android:id="@+id/AutomaticOrderFragment"
         android:name="com.example.aplicatieandroidip.AutomaticOrderFragment"
         android:label="Automatic Order">
+        <action
+            android:id="@+id/action_AutomaticOrderFragment_to_OrderStatusFragment"
+            app:destination="@id/OrderStatusFragment" />
 
         <!--Back-->
         <action
             android:id="@+id/action_AutomaticOrderFragment_to_HomeFragment"
             app:destination="@id/HomeFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/OrderStatusFragment"
+        android:name="com.example.aplicatieandroidip.OrderStatusFragment"
+        android:label="Order Status">
+    <action
+        android:id="@+id/action_OrderStatusFragment_to_HomeFragment"
+        app:destination="@id/HomeFragment" />
+    </fragment>
+
 </navigation>
