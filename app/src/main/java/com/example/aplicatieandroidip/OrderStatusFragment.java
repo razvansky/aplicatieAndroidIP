@@ -68,10 +68,19 @@ public class OrderStatusFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        statusChecker = new Runnable() {
+            @Override
+            public void run() {
+                checkOrderStatus(orderId);
+                handler.postDelayed(this, 5000); // poll every 5 seconds
+            }
+        };
+
+        handler.post(statusChecker);
 
     }
 
-    private void checkOrderStatus(String orderId) {
+    private void checkOrderStatus(int orderId) {
         new Thread(() -> {
             try {
                 URL url = new URL("http://132.220.27.51/comenzi/status");
