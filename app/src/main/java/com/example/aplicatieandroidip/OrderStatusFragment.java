@@ -42,9 +42,9 @@ public class OrderStatusFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            String name = args.getString("name");
-            String time = args.getString("time");
-            String status = args.getString("status");
+            name = args.getString("name");
+            time = args.getString("time");
+            status = args.getString("status");
             orderId = args.getInt("orderID");
 
             token = getContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE).getString("access_token", null);
@@ -71,7 +71,7 @@ public class OrderStatusFragment extends Fragment {
         statusChecker = new Runnable() {
             @Override
             public void run() {
-                checkOrderStatus(orderId);
+                checkOrderStatus();
                 handler.postDelayed(this, 5000); // poll every 5 seconds
             }
         };
@@ -80,7 +80,7 @@ public class OrderStatusFragment extends Fragment {
 
     }
 
-    private void checkOrderStatus(int orderId) {
+    private void checkOrderStatus() {
         new Thread(() -> {
             try {
                 URL url = new URL("http://132.220.27.51/comenzi/status");
@@ -97,7 +97,7 @@ public class OrderStatusFragment extends Fragment {
                 }
 
                 JSONObject orderJson = new JSONObject(response.toString());
-                String status = orderJson.getString("status");
+                status = orderJson.getString("status");
                 String now = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
 
                 requireActivity().runOnUiThread(() -> updateStatusUI(status, now));
