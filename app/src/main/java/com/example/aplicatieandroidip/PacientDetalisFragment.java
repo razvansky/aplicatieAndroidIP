@@ -23,7 +23,7 @@ import java.net.URL;
 
 public class PacientDetalisFragment extends Fragment {
 
-    private String fullName, cnp, email, county, city, address, phone, jobName, jobPlace, gender, bloodGroup, rh, bedId;
+    private String fullName, cnp, email, county, city, address, phone, jobName, jobPlace, gender, bloodGroup, rh, bedId, token;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,14 +45,16 @@ public class PacientDetalisFragment extends Fragment {
     private void fetchPacientDetails() {
         new Thread(() -> {
             try {
-                SharedPreferences prefs = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-                String token = prefs.getString("access_token", null);
+                SharedPreferences prefs = requireContext().getSharedPreferences("LoginPreferences", Context.MODE_PRIVATE);
+                token = prefs.getString("Access_token", null);
 
                 URL url = new URL("http://132.220.27.51/angajati/medic");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Authorization", "Bearer " + token);
                 conn.setRequestProperty("Accept", "application/json");
+
+                Log.e("PacientDetails", "HTTP Response" + conn.getResponseCode());
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder response = new StringBuilder();
@@ -64,7 +66,7 @@ public class PacientDetalisFragment extends Fragment {
 
                 for (int i = 0; i < pacients.length(); i++) {
                     JSONObject obj = pacients.getJSONObject(i);
-                    if(cnp.equals(obj.optString("cnp", ""))) {
+                    if(cnp.equals(obj.optString("CNP", ""))) {
                         Log.d("PacientDetails", "CNP is valid");
                         fullName = obj.optString("nume", "") + " " + obj.optString("prenume", "");
                         address = obj.optString("strada", "") + " nr. "
@@ -84,19 +86,19 @@ public class PacientDetalisFragment extends Fragment {
                     }
                 }
                 requireActivity().runOnUiThread(() -> {
-                    ((TextView) requireView().findViewById(R.id.pacient_name_details)).setText(fullName);
-                    ((TextView) requireView().findViewById(R.id.pacient_cnp_details)).setText(cnp);
-                    ((TextView) requireView().findViewById(R.id.pacient_mail_details)).setText(email);
-                    ((TextView) requireView().findViewById(R.id.pacient_phone_details)).setText(phone);
-                    ((TextView) requireView().findViewById(R.id.pacient_county_details)).setText(county);
-                    ((TextView) requireView().findViewById(R.id.pacient_city_details)).setText(city);
-                    ((TextView) requireView().findViewById(R.id.pacient_address_details)).setText(address);
-                    ((TextView) requireView().findViewById(R.id.pacient_jobName_details)).setText(jobName);
-                    ((TextView) requireView().findViewById(R.id.pacient_jobPlace_details)).setText(jobPlace);
-                    ((TextView) requireView().findViewById(R.id.pacient_gender_details)).setText(gender);
-                    ((TextView) requireView().findViewById(R.id.pacient_blood_details)).setText(bloodGroup);
-                    ((TextView) requireView().findViewById(R.id.pacient_rh_details)).setText(rh);
-                    ((TextView) requireView().findViewById(R.id.pacient_bed_details)).setText(bedId);
+                    ((TextView) requireView().findViewById(R.id.pacient_name_details)).setText(getString(R.string.PacientName,fullName));
+                    ((TextView) requireView().findViewById(R.id.pacient_cnp_details)).setText(getString(R.string.PacientID,cnp));
+                    ((TextView) requireView().findViewById(R.id.pacient_mail_details)).setText(getString(R.string.PacientEmail,email));
+                    ((TextView) requireView().findViewById(R.id.pacient_phone_details)).setText(getString(R.string.PacientPhoneNo,phone));
+                    ((TextView) requireView().findViewById(R.id.pacient_county_details)).setText(getString(R.string.PacientCounty,county));
+                    ((TextView) requireView().findViewById(R.id.pacient_city_details)).setText(getString(R.string.PacientCity,city));
+                    ((TextView) requireView().findViewById(R.id.pacient_address_details)).setText(getString(R.string.PacientAddress,address));
+                    ((TextView) requireView().findViewById(R.id.pacient_jobName_details)).setText(getString(R.string.PacientJobName,jobName));
+                    ((TextView) requireView().findViewById(R.id.pacient_jobPlace_details)).setText(getString(R.string.PacientJobWorkplace,jobPlace));
+                    ((TextView) requireView().findViewById(R.id.pacient_gender_details)).setText(getString(R.string.PacientGender,gender));
+                    ((TextView) requireView().findViewById(R.id.pacient_blood_details)).setText(getString(R.string.PacientBloodGroup, bloodGroup));
+                    ((TextView) requireView().findViewById(R.id.pacient_rh_details)).setText(getString(R.string.PacientRH,rh));
+                    ((TextView) requireView().findViewById(R.id.pacient_bed_details)).setText(getString(R.string.PacientBed,bedId));
                 });
 
             } catch (Exception e) {

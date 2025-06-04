@@ -1,5 +1,6 @@
 package com.example.aplicatieandroidip;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -45,6 +46,7 @@ public class AutomaticOrderFragment extends Fragment {
     private Button confirmButton, cancelButton;
     private String name, cnp, phoneNo, token, idPat, time, timestamp;
     private int idPrescriptie;
+    NavController navController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,19 +66,37 @@ public class AutomaticOrderFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_automatic_order, container, false);
 
         tvPacientName = view.findViewById(R.id.pacient_name_order);
-        tvPacientName.setText(name);
+        tvPacientName.setText(getString(R.string.PacientName,name));
         tvPacientCnp = view.findViewById(R.id.pacient_cnp_order);
-        tvPacientCnp.setText(cnp);
+        tvPacientCnp.setText(getString(R.string.PacientID,cnp));
         tvPacientPhoneNo = view.findViewById(R.id.pacient_phone_order);
-        tvPacientPhoneNo.setText(phoneNo);
+        tvPacientPhoneNo.setText(getString(R.string.PacientPhoneNo,phoneNo));
 
         medicineListContainer = view.findViewById(R.id.PrescriptionLayout);
         confirmButton = view.findViewById(R.id.confirm_order_button);
         cancelButton = view.findViewById(R.id.cancel_order_button);
 
         confirmButton.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Order confirmed!", Toast.LENGTH_SHORT).show();
-            postOrder();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+            builder.setTitle("Select Order Type")
+                    .setMessage("How do you want to place the order?")
+                    .setPositiveButton("Automatically", (dialog, which) -> {
+                        // Handle automatic ordering
+                        Toast.makeText(this.getContext(), "Automatic order selected", Toast.LENGTH_SHORT).show();
+                        postOrder();
+                    })
+                    .setNegativeButton("Manually", (dialog, which) -> {
+                        // Handle manual ordering
+                        Toast.makeText(this.getContext(), "Manual order selected", Toast.LENGTH_SHORT).show();
+                        Bundle args = new Bundle();
+                        args.putString("status", "Plasata");
+                        navController = Navigation.findNavController(v);
+                        navController.navigate(R.id.action_AutomaticOrderFragment_to_BluetoothFragment, args);
+                        Log.d("AutomaticOrder", "Navigating to BluetoothFragment");
+
+                    })
+                    .setNeutralButton("Cancel", null)
+                    .show();
         });
 
         cancelButton.setOnClickListener(v -> {

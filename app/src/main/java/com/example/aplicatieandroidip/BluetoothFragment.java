@@ -254,6 +254,8 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
     {
         Intent intent = new Intent(this.getContext(), ManualControlActivity.class);
         intent.putExtra("device", device.getAddress());
+        String status = getArguments() != null ? getArguments().getString("status") : "";
+        intent.putExtra("status", status);
         startActivity(intent);
     }
 

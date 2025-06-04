@@ -58,8 +58,8 @@ public class OrderStatusFragment extends Fragment {
         TextView title = view.findViewById(R.id.orderTitle);
         TextView placedTime = view.findViewById(R.id.orderPlaced);
 
-        title.setText(name);
-        placedTime.setText(time);
+        title.setText(getString(R.string.OrderTitle,name));
+        placedTime.setText(getString(R.string.OrderPlaced,time));
 
         return view;
     }
@@ -111,17 +111,21 @@ public class OrderStatusFragment extends Fragment {
     private void updateStatusUI(String status, String time) {
         switch (status) {
             case "Plasata":
-                setTime(R.id.orderPlaced, time);
+                TextView tv = requireView().findViewById(R.id.orderPlaced);
+                tv.setText(getString(R.string.OrderPlaced,time));
                 break;
             case "InProcesare":
-                setTime(R.id.orderProcessed, time);
+                tv = requireView().findViewById(R.id.orderProcessed);
+                tv.setText(getString(R.string.OrderProcessed,time));
                 break;
             case "InTranzit":
-                setTime(R.id.orderTransit, time);
+                tv = requireView().findViewById(R.id.orderTransit);
+                tv.setText(getString(R.string.OrderTransit,time));
                 break;
             case "Livrata":
                 if (!arrived) {
-                    setTime(R.id.orderFinish, time);
+                    tv = requireView().findViewById(R.id.orderFinish);
+                    tv.setText(getString(R.string.OrderFinished,time));
                     showArrivalPopup();
                     arrived = true;
                     handler.removeCallbacks(statusChecker); // stop polling
@@ -130,10 +134,6 @@ public class OrderStatusFragment extends Fragment {
         }
     }
 
-    private void setTime(int textViewId, String time) {
-        TextView tv = requireView().findViewById(textViewId);
-        tv.setText(time);
-    }
 
     private void showArrivalPopup() {
         new AlertDialog.Builder(requireContext())

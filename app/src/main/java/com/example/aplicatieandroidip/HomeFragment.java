@@ -84,17 +84,6 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    /* private void setUpPacientList(){
-        String[] pacientNames = getResources().getStringArray(R.array.pacient_name_txt);
-        String[] pacientIDS = getResources().getStringArray(R.array.pacient_id_txt);
-
-        for(int i = 0; i < pacientNames.length; i++)
-        {
-            pacientList.add(new Pacient(pacientNames[i], pacientIDS[i], R.drawable.ic_pacienticon));
-        }
-    }
-
-    */
 
     private void fetchPacients(String token){
         new Thread(() ->{

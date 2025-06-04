@@ -20,12 +20,12 @@
     <string name="PacientEmail">Email: %1$s</string>
     <string name="PacientCounty">County: %1$s</string>
     <string name="PacientCity">City: %1$s</string>
-    <string name="PacientAddress">Street: %1$s, Nr. %2$d, Sc. %3$c, Ap. %4$d</string>
+    <string name="PacientAddress">Street: %1$s</string>
     <string name="PacientJobName">Job Name: %1$s</string>
     <string name="PacientJobWorkplace">Job Workplace: %1$s</string>
     <string name="PacientGender">%1$s</string>
     <string name="PacientBloodGroup">Blood Group: %1$s</string>
-    <string name="PacientRH">RH: %1$c</string>
+    <string name="PacientRH">RH: %1$s</string>
     <string name="PacientBed">Bed ID: %1$s</string>
 
     <string name="Address">Address</string>

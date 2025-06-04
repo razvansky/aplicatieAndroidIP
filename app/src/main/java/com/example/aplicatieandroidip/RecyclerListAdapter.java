@@ -46,7 +46,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         //assign values based on position
         Pacient pacient = pacientList.get(position);
         holder.name.setText(pacient.getPacientName());
-        holder.id.setText(pacient.getPacientID());
+        holder.id.setText(context.getString(R.string.PacientID,pacient.getPacientID()));
         holder.image.setImageResource(pacient.getPacientImage());
 
         holder.itemView.setOnClickListener(v -> {
@@ -64,30 +64,14 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                 }
                 else if(item.getItemId() == R.id.menu_order_robot) {
                     // Navigate to BluetoothFrag
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
-                    builder.setTitle("Select Order Type")
-                            .setMessage("How do you want to place the order?")
-                            .setPositiveButton("Automatically", (dialog, which) -> {
-                                // Handle automatic ordering
-                                Toast.makeText(this.context, "Automatic order selected", Toast.LENGTH_SHORT).show();
+                    Bundle args = new Bundle();
+                    args.putString("name", pacient.getPacientName());
+                    args.putString("cnp", pacient.getPacientID());
+                    args.putString("phoneNo", pacient.getPacientPhoneNo());
+                    args.putString("id_pat", pacient.getPacientPat());
 
-                                Bundle args = new Bundle();
-                                args.putString("name", pacient.getPacientName());
-                                args.putString("cnp", pacient.getPacientID());
-                                args.putString("phoneNo", pacient.getPacientPhoneNo());
-                                args.putString("id_pat", pacient.getPacientPat());
-
-                                navController = Navigation.findNavController(v);
-                                navController.navigate(R.id.action_HomeFragment_to_AutomaticOrderFragment, args);
-                            })
-                            .setNegativeButton("Manually", (dialog, which) -> {
-                                // Handle manual ordering
-                                Toast.makeText(this.context, "Manual order selected", Toast.LENGTH_SHORT).show();
-                                navController = Navigation.findNavController(v);
-                                navController.navigate(R.id.action_HomeFragment_to_BluetoothFragment);
-                            })
-                            .setNeutralButton("Cancel", null)
-                            .show();
+                    navController = Navigation.findNavController(v);
+                    navController.navigate(R.id.action_HomeFragment_to_AutomaticOrderFragment, args);
                     return true;
                 }
                 else

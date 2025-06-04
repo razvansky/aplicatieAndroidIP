@@ -2,6 +2,7 @@ package com.example.aplicatieandroidip;
 
 
 
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
@@ -11,11 +12,14 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import java.util.ArrayDeque;
 
@@ -24,7 +28,7 @@ public class ManualControlActivity extends AppCompatActivity implements ServiceC
 
     private static final String TAG = "ManualControl";
     private enum Connected { False, Pending, True }
-    private String deviceAddress;
+    private String deviceAddress, status;
     private SerialService service;
     private Connected connected = Connected.False;
     private boolean initialStart = true;
@@ -82,7 +86,12 @@ public class ManualControlActivity extends AppCompatActivity implements ServiceC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_control);
         deviceAddress = getIntent().getStringExtra("device");
+        status = getIntent().getStringExtra("status");
         Log.d(TAG, "Received address = " + deviceAddress);
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            showArrivalPopup();
+        }, 10_000);
 
         findViewById(R.id.btnUp).setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
@@ -289,4 +298,20 @@ public class ManualControlActivity extends AppCompatActivity implements ServiceC
         Log.e(TAG, "Service couldn't connect" + e.getMessage());
         disconnect();
     }
+
+    private void showArrivalPopup() {
+        new AlertDialog.Builder(this)
+                .setTitle("Order Arrived")
+                .setMessage("The order has been delivered.")
+                .setCancelable(false)
+                .setPositiveButton("Go Home", (dialog, which) -> {
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtra("navigateTo", "HomeFragment"); // optional
+                    startActivity(intent);
+                    finish();
+
+                })
+                .show();
+    }
+
 }

@@ -31,6 +31,12 @@
         <action
             android:id="@+id/action_HomeFragment_to_LoginFragment"
             app:destination="@+id/LoginFragment" />
+
+        <action
+            android:id="@+id/action_global_homeFragment"
+            app:destination="@id/HomeFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/HomeFragment" />
     </fragment>
 
     <fragment
@@ -50,6 +56,9 @@
         <action
             android:id="@+id/action_AutomaticOrderFragment_to_OrderStatusFragment"
             app:destination="@id/OrderStatusFragment" />
+        <action
+            android:id="@+id/action_AutomaticOrderFragment_to_BluetoothFragment"
+            app:destination="@id/BluetoothFragment" />
 
         <!--Back-->
         <action
