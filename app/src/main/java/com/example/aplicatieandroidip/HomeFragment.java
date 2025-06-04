@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
             try{
                 Log.d(TAG, "Starting GET /api/pacients request");
 
-                URL url = new URL("http://132.220.27.51/angajati/medic/");
+                URL url = new URL("http://132.220.195.219/angajati/medic/");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
 

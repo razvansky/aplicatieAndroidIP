@@ -8,10 +8,10 @@
     <string name="bluetooth_permission_denied">Bluetooth permission was permanently denied. You have to enable permission \"%s\" in App settings.</string>
     <string name="title_activity_manual_control">ManualControlActivity</string>
 
-    <string name="Connect">Conectare</string>
+    <string name="Connect">Connect</string>
     <string name="Password">Password:</string>
     <string name="ID">ID:</string>
-    <string name="LoginText">Bun venit in aplicatia de control</string>
+    <string name="LoginText">MediPort App</string>
     <string name="HomeText">Bine ai venit, </string>
 
     <string name="Pacient">Pacient Details</string>
@@ -24,7 +24,7 @@
     <string name="PacientAddress">Street: %1$s</string>
     <string name="PacientJobName">Job Name: %1$s</string>
     <string name="PacientJobWorkplace">Job Workplace: %1$s</string>
-    <string name="PacientGender">%1$s</string>
+    <string name="PacientGender">Gender: %1$s</string>
     <string name="PacientBloodGroup">Blood Group: %1$s</string>
     <string name="PacientRH">RH: %1$s</string>
     <string name="PacientBed">Bed ID: %1$s</string>

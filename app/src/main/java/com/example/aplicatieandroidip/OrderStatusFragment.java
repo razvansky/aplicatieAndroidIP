@@ -60,6 +60,13 @@ public class OrderStatusFragment extends Fragment {
 
         title.setText(getString(R.string.OrderTitle,name));
         placedTime.setText(getString(R.string.OrderPlaced,time));
+        TextView tv;
+        tv = view.findViewById(R.id.orderProcessed);
+        tv.setText(getString(R.string.OrderProcessed,""));
+        tv = view.findViewById(R.id.orderTransit);
+        tv.setText(getString(R.string.OrderTransit,""));
+        tv = view.findViewById(R.id.orderFinish);
+        tv.setText(getString(R.string.OrderFinished,""));
 
         return view;
     }
@@ -83,7 +90,7 @@ public class OrderStatusFragment extends Fragment {
     private void checkOrderStatus() {
         new Thread(() -> {
             try {
-                URL url = new URL("http://132.220.27.51/comenzi/status");
+                URL url = new URL("http://132.220.195.219/comenzi/status");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Accept", "application/json");

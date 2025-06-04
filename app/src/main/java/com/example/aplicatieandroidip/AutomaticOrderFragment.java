@@ -117,7 +117,7 @@ public class AutomaticOrderFragment extends Fragment {
     private void fetchPrescriptions() {
         new Thread(() -> {
             try {
-                URL url = new URL("http://132.220.27.51/prescriptii/");
+                URL url = new URL("http://132.220.195.219/prescriptii/");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Accept", "application/json");
@@ -179,7 +179,7 @@ public class AutomaticOrderFragment extends Fragment {
     }
 
     private String fetchMedicineNameById(int idMedicament) throws IOException, JSONException {
-        URL url = new URL("http://132.220.27.51/angajati/medic/medicamente/");
+        URL url = new URL("http://132.220.195.219/angajati/medic/medicamente/");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Authorization", "Bearer " + token);
@@ -205,7 +205,7 @@ public class AutomaticOrderFragment extends Fragment {
     private void postOrder() {
         new Thread(() -> {
             try {
-                URL url = new URL("http://132.220.27.51/comenzi"); // Adjust endpoint
+                URL url = new URL("http://132.220.195.219/comenzi"); // Adjust endpoint
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
