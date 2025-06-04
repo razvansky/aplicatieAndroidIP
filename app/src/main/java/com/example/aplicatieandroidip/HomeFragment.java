@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment {
         }
 
         TextView welcomeText = view.findViewById(R.id.tvWelcome);
-        welcomeText.setText("Welcome, " + username + "\nHere is your data:");
+        welcomeText.setText("Welcome Doctor" + "\nHere is your pacient list:");
         return view;
     }
 
