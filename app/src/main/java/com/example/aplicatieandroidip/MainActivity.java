@@ -1,14 +1,14 @@
 package com.example.aplicatieandroidip;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,16 +17,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-    }
-    public void Conectare(View v) {
-        TextView id_con = findViewById(R.id.id_conectare);
-        String id = id_con.getText().toString();
-
-        TextView parola = findViewById(R.id.parola_conectare);
-        String pass = parola.getText().toString();
-
-        if (id.equals("admin") && pass.equals("123")) {
-            ((TextView) findViewById(R.id.apa)).setText("MAIFIAAA");
+        String destination = getIntent().getStringExtra("navigateTo");
+        if ("HomeFragment".equals(destination)) {
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            navController.navigate(R.id.HomeFragment);
         }
     }
+
+
+
+
 }
