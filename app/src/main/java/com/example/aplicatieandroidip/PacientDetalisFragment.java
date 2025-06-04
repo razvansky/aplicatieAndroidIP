@@ -48,7 +48,7 @@ public class PacientDetalisFragment extends Fragment {
                 SharedPreferences prefs = requireContext().getSharedPreferences("LoginPreferences", Context.MODE_PRIVATE);
                 token = prefs.getString("Access_token", null);
 
-                URL url = new URL("http://132.220.27.51/angajati/medic");
+                URL url = new URL("http://132.220.195.219/angajati/medic");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Authorization", "Bearer " + token);

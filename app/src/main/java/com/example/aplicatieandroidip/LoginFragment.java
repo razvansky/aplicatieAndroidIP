@@ -57,7 +57,7 @@ public class LoginFragment extends Fragment {
     private void loginToCloud(String id, String password) {
         new Thread(() -> {
             try {
-                URL url = new URL("http://132.220.27.51/login"); // adjust path
+                URL url = new URL("http://132.220.195.219/login"); // adjust path
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Accept", "application/json");
