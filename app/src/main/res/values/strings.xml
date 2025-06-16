@@ -45,4 +45,7 @@
     <string name="OrderProcessed">Order Processed at: %1$s</string>
     <string name="OrderTransit">Order In Transit at: %1$s</string>
     <string name="OrderFinished">Order Arrived at: %1$s</string>
+
+    <string name="SirenEnable">Turn on Siren</string>
+    <string name="Mode">Switch Mode</string>
 </resources>

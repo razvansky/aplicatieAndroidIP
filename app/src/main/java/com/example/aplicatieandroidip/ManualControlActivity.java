@@ -12,14 +12,13 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import java.util.ArrayDeque;
 
@@ -89,9 +88,10 @@ public class ManualControlActivity extends AppCompatActivity implements ServiceC
         status = getIntent().getStringExtra("status");
         Log.d(TAG, "Received address = " + deviceAddress);
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+        /*new Handler(Looper.getMainLooper()).postDelayed(() -> {
             showArrivalPopup();
         }, 10_000);
+         */
 
         findViewById(R.id.btnUp).setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
@@ -167,6 +167,22 @@ public class ManualControlActivity extends AppCompatActivity implements ServiceC
                     return true;
             }
             return false;
+        });
+        findViewById(R.id.btnSwitch).setOnClickListener(v -> {
+            send("M");
+            Toast.makeText(getBaseContext(),"Switched to Automatic Mode", Toast.LENGTH_SHORT).show();
+            ImageButton btnDown = findViewById(R.id.btnDown);
+            ImageButton btnUp = findViewById(R.id.btnUp);
+            ImageButton btnLeft = findViewById(R.id.btnLeft);
+            ImageButton btnRight = findViewById(R.id.btnRight);
+            btnDown.setVisibility(View.INVISIBLE);
+            btnUp.setVisibility(View.INVISIBLE);
+            btnLeft.setVisibility(View.INVISIBLE);
+            btnRight.setVisibility(View.INVISIBLE);
+            v.findViewById(R.id.btnSwitch).setVisibility(View.INVISIBLE);
+        });
+        findViewById(R.id.btnSiren).setOnClickListener(v ->{
+            send("O");
         });
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
